@@ -2,6 +2,7 @@
 const program = require('commander');
 const figlet = require('figlet');
 const main = require('./main');
+const package = require('../package.json');
 
 console.log(figlet.textSync('Github Repo Tools'));
 
@@ -11,7 +12,7 @@ function collect(val, memo) {
 }
 
 program
-  .version('1.0.0', '-v, --version')
+  .version(package.version, '-v, --version')
   .description('Search npm packages in all org repos. You can set GITHUB_TOKEN env var, if public access restricted')
   .option('-o, --org <org>', 'github org where search applied')
   .option('-u, --user <user>', 'github user where search applied')
