@@ -22,8 +22,8 @@ program
   .option('--no-peer-deps', 'disable search in "peerDependencies" package.json field')
   .option('--no-skip-empty', 'not skip repo, if package not found')
   .option('--skip-error <errorToSkip>', 'skip repo, if error with such code occured', collect, ['404'])
-  .option('-n, --nvm', 'search node version based on .nvmrc (TBD)')
-  .option('-e, --engines', 'search npm engines field (TBD)')
+  .option('-n, --nvm', 'search node version based on .nvmrc')
+  .option('-e, --engines', 'search npm engines field')
   .parse(process.argv);
 
 // console.log(program);
