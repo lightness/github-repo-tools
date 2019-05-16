@@ -6,9 +6,23 @@ Main goal is check versions of some npm package in all repos of single github us
 
 <img src="https://pp.userapi.com/c850016/v850016709/18fee1/JwKo9KOnzBg.jpg" align="center" />
 
-## Options description
+```sh
+# Search node/npm versions package.json engines
+grt -u <github-user> -e
 
+# Search node version from .nvmrc
+grt -u <github-user> -n
+
+# Search npm package in package.json
+grt -u <github-user> -p <npm-package>
+
+# Search npm package just in package.json "devDependencies" field
+grt -u <github-user> -p <npm-package> --no-deps --no-peer-deps
 ```
+
+## Usage
+
+```sh
 $ grt -h
    ____ _ _   _           _       ____                    _____           _     
   / ___(_) |_| |__  _   _| |__   |  _ \ ___ _ __   ___   |_   _|__   ___ | |___ 
@@ -30,7 +44,7 @@ Options:
   --no-peer-deps              disable search in "peerDependencies" package.json field
   --no-skip-empty             not skip repo, if package not found
   --skip-error <errorToSkip>  skip repo, if error with such code occured (default: ["404"])
-  -n, --nvm                   search node version based on .nvmrc (TBD)
-  -e, --engines               search npm engines field (TBD)
+  -n, --nvm                   search node version based on .nvmrc
+  -e, --engines               search npm engines field
   -h, --help                  output usage information
 ```
