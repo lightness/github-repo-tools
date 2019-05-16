@@ -1,6 +1,6 @@
 {
   "name": "github-repo-tools",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Useful tool to get versions from all repos of Github user/org",
   "main": "src/cli.js",
   "bin": {

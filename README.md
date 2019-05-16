@@ -6,6 +6,8 @@ Main goal is check versions of some npm package in all repos of single github us
 
 <img src="https://pp.userapi.com/c850016/v850016709/18fee1/JwKo9KOnzBg.jpg" align="center" />
 
+#### Some usage examples:
+
 ```sh
 # Search node/npm versions package.json engines
 grt -u <github-user> -e
@@ -22,7 +24,7 @@ grt -u <github-user> -p <npm-package> --no-deps --no-peer-deps
 
 ## Usage
 
-```sh
+```
 $ grt -h
    ____ _ _   _           _       ____                    _____           _     
   / ___(_) |_| |__  _   _| |__   |  _ \ ___ _ __   ___   |_   _|__   ___ | |___ 
