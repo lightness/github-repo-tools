@@ -1,0 +1,29 @@
+{
+  "name": "github-repo-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "grt": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/plugin-retry": "^2.2.0",
+    "@octokit/rest": "^16.25.3",
+    "chalk": "^2.4.2",
+    "cli-table3": "^0.5.1",
+    "commander": "^2.20.0",
+    "dotenv": "^8.0.0",
+    "figlet": "^1.2.1",
+    "moment": "^2.24.0",
+    "ora": "^3.4.0"
+  },
+  "engines": {
+    "node": "10.x"
+  }
+}
