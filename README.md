@@ -1,12 +1,10 @@
-<!-- <img src="icon.png" align="right" /> -->
-
 # Github Repo Tools
 
 Main goal is check versions of some npm package in all repos of single github user/org.
 
 ## Examples
 
-<img src="./doc/images/example-01.png" align="center" />
+<img src="https://pp.userapi.com/c850016/v850016709/18fee1/JwKo9KOnzBg.jpg" align="center" />
 
 ## Options description
 
