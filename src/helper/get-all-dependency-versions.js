@@ -15,7 +15,7 @@ async function getAllDependencyVersions(owner, repo, depName, options) {
       peerDepVersion && `${peerDepVersion} (peer)`
     ])
       .filter(x => x)
-      .join(', ') || '-';
+      .join(', ') || null;
 
     return {
       repo,

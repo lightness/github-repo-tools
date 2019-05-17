@@ -1,19 +1,26 @@
 const ora = require('ora');
 const getNvmrc = require('../helper/get-nvmrc');
+const getEngines = require('../helper/get-engines');
 
-async function searchNodeDependency(repos, program) {
-  const { org, user } = program;
-  
-  console.log(`Search node version from .nvmrc`);
-  const spinner = ora({ prefixText: 'Search for .nvmrc in every repo...' }).start();
+async function searchNodeVersion(repos, program) {
+  const { org, user, nvm, engines } = program;
+
+  const sources = [nvm && '.nvmrc', engines && 'package.json engines'].filter(x => x).join(' and ');
+  console.log(`Search node version from ${sources}`);
+
+  const spinner = ora({ prefixText: `Search for ${sources} in every repo...` }).start();
   const result = await Promise.all(
     repos.map(async repo => {
       try {
-        const version = await getNvmrc(org || user, repo);
+        const [nvmVersion, enginesVersion] = await Promise.all([
+          nvm ? getNvmrc(org || user, repo).catch(() => null) : null,
+          engines ? getEngines(org || user, repo).catch(() => null) : null
+        ]);
 
         return {
           repo,
-          version,
+          nvmVersion,
+          enginesVersion,
         };
       }
       catch (e) {
@@ -29,4 +36,4 @@ async function searchNodeDependency(repos, program) {
   return result;
 }
 
-module.exports = searchNodeDependency;
+module.exports = searchNodeVersion;

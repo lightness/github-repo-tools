@@ -1,40 +1,43 @@
-var Table = require('cli-table3');
+const Table = require('cli-table3');
+const changeCase = require('change-case');
 
 function formatAsTable(data) {
-  const hasErrors = data.some(item => item.error);
-  const table = hasErrors 
-    ? getTableWithErrors(data)
-    : getTableWithoutErrors(data);
+  const order = {
+    "repo": Number.MIN_VALUE,
+    "version": -10,
+    "packageLockVersion": -9,
+    "yarnLockVersion": -8,
+    "nvmVersion": -7,
+    "enginesVersion": -6,
+    "error": Number.MAX_VALUE,
+  }
+
+  const fieldSet = data.reduce(
+    (set, item) => {
+      Object.keys(item).map(key => {
+        set.add(key);
+      });
+
+      return set;
+    },
+    new Set(),
+  );
+  const fields = [...fieldSet].sort((fieldA, fieldB) => (order[fieldB] || 0) - (order[fieldA] || 0));
+  const headers = fields.map(field => changeCase.sentenceCase(field));
+
+  const table = new Table({
+    head: headers,
+  });
+
+  const [key, ...values] = fields;
+
+  data.forEach(item => {
+    table.push({
+      [item[key]]: values.map(value => item[value])
+    });
+  });
 
   return table.toString();
-}
-
-function getTableWithErrors(data) {
-  const table = new Table({
-    head: ["Repo", "Version", "Error"]
-  });
-
-  data.forEach(item => {
-    table.push({
-      [item.repo]: [item.version, item.error]
-    });
-  });
-
-  return table;
-}
-
-function getTableWithoutErrors(data) {
-  const table = new Table({
-    head: ["Repo", "Version"]
-  });
-
-  data.forEach(item => {
-    table.push({
-      [item.repo]: [item.version]
-    });
-  });
-
-  return table;
 }
 
 module.exports = formatAsTable;
