@@ -30,7 +30,7 @@ async function main(program) {
     const filteredResult = result.filter(getResultFilter({ skipEmpty, skipError }));
     const noDataMessage = chalk.red('Nothing to show');
   
-    console.log(formatAsTable(filteredResult) || noDataMessage);
+    console.log(formatAsTable(filteredResult, program) || noDataMessage);
   }
 
   console.log(await getRateLimit());

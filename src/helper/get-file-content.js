@@ -13,9 +13,9 @@ async function getFileContent(owner, repo, path) {
 
     return text;
   } catch (e) {
-    if (e.status !== 404) {
-      console.log(e);
-    }
+    // if (e.status !== 404) {
+    //   console.log(e);
+    // }
     throw new Error(e.status);
   }
 }

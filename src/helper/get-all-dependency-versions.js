@@ -1,11 +1,13 @@
 const getPackageJson = require('./get-package-json');
 const getDependencyVersion = require('./get-dependency-version');
+const getVersionFromPackageLock = require('./get-version-from-package-lock');
+const getVersionFromYarnLock = require('./get-version-from-yarn-lock');
 
 async function getAllDependencyVersions(owner, repo, depName, options) {
-  const { fields = { deps: true } } = options;
+  const { fields = { deps: true }, packageLock, yarnLock } = options;
 
   try {
-    const packageJson = await getPackageJson(owner, repo)
+    const packageJson = await getPackageJson(owner, repo);
     const depVersion = fields.deps && getDependencyVersion(packageJson, depName, 'dependencies');
     const devDepVersion = fields.devDeps && getDependencyVersion(packageJson, depName, 'devDependencies');
     const peerDepVersion = fields.peerDeps && getDependencyVersion(packageJson, depName, 'peerDependencies');
@@ -20,6 +22,8 @@ async function getAllDependencyVersions(owner, repo, depName, options) {
     return {
       repo,
       version,
+      packageLockVersion: packageLock ? await getVersionFromPackageLock(owner, repo, depName).catch(() => null) : null,
+      yarnLockVersion: yarnLock ? await getVersionFromYarnLock(owner, repo, depName).catch(() => null) : null,
     };
   }
   catch (e) {
