@@ -1,14 +1,18 @@
 {
   "name": "github-repo-tools",
-  "version": "1.0.6",
+  "version": "2.0.0-rc.2",
   "description": "Useful tool to get versions from all repos of Github user/org",
-  "main": "src/cli.js",
+  "main": "build/src/app.js",
   "bin": {
-    "grt": "./src/cli.js"
+    "grt": "./build/src/app.js"
   },
   "scripts": {
-    "start": "node ./src/cli.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "start": "ts-node ./src/app.js",
+    "start:built": "node ./build/src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "tsc"
   },
   "author": "Uladzimir Aleshka <uladzimir.aleshka@gmail.com>",
   "repository": {
@@ -23,20 +27,30 @@
     "github"
   ],
   "dependencies": {
+    "@nestjs/common": "^6.2.0",
+    "@nestjs/core": "^6.2.0",
     "@octokit/plugin-retry": "^2.2.0",
     "@octokit/rest": "^16.25.3",
     "@yarnpkg/lockfile": "^1.1.0",
     "chalk": "^2.4.2",
     "change-case": "^3.1.0",
+    "class-transformer": "^0.2.2",
+    "class-validator": "^0.9.1",
     "cli-table3": "^0.5.1",
     "commander": "^2.20.0",
     "dotenv": "^8.0.0",
     "figlet": "^1.2.1",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
-    "ora": "^3.4.0"
+    "ora": "^3.4.0",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^6.5.2"
   },
   "engines": {
     "node": "10.x"
+  },
+  "devDependencies": {
+    "@types/node": "^12.0.2",
+    "typescript": "^3.4.5"
   }
 }
