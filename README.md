@@ -4,7 +4,13 @@ Main goal is check versions of some npm package in all repos of single github us
 
 ## Examples
 
+#### You can specify command line arguments
+
 <img src="https://pp.userapi.com/c850016/v850016709/18fee1/JwKo9KOnzBg.jpg" align="center" />
+
+#### Or just answer some questions
+
+<img src="https://pp.userapi.com/c850728/v850728163/122ff9/Mant09kj4M4.jpg" align="center" />
 
 #### Some usage examples:
 
@@ -44,9 +50,13 @@ Options:
   --no-deps                   disable search in "dependencies" package.json field
   --no-dev-deps               disable search in "devDependencies" package.json field
   --no-peer-deps              disable search in "peerDependencies" package.json field
+  --no-yarn-lock              disable search in yarn.lock
+  --no-package-lock           disable search in package-lock.json
   --no-skip-empty             not skip repo, if package not found
   --skip-error <errorToSkip>  skip repo, if error with such code occured (default: ["404"])
-  -n, --nvm                   search node version based on .nvmrc
-  -e, --engines               search npm engines field
+  -n, --node                  search node version based on .nvmrc and package.json engines
+  --no-nvm                    disable search in .nvmrc
+  --no-engines                disable search in package.json engines
+  -l, --rate-limit            show rate limit
   -h, --help                  output usage information
 ```
