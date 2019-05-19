@@ -22,7 +22,7 @@ export class AppService {
   }
 
   public async main() {
-    const options = this.cliService.getProgramOptions();
+    const options = await this.cliService.getProgramOptions();
     const { package: packageName, node, rateLimit } = options;
 
     if (node) {
