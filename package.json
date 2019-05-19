@@ -1,6 +1,6 @@
 {
   "name": "github-repo-tools",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0-rc.2",
   "description": "Useful tool to get versions from all repos of Github user/org",
   "main": "build/src/app.js",
   "bin": {
@@ -11,7 +11,8 @@
     "build:watch": "tsc -w",
     "start": "ts-node ./src/app.js",
     "start:built": "node ./build/src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "tsc"
   },
   "author": "Uladzimir Aleshka <uladzimir.aleshka@gmail.com>",
   "repository": {
