@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import chalk from 'chalk';
 import { CliService } from "./modules/cli/cli.service";
 import { NodeVersionService } from "./modules/node-version/node.version.service";
 import { INodeVersion } from "./modules/node-version/interfaces";
@@ -24,6 +25,8 @@ export class AppService {
   public async main() {
     const options = await this.cliService.getProgramOptions();
     const { package: packageName, node, rateLimit } = options;
+
+    this.showInfo();
 
     if (node) {
       return this.nodeCase(options);
@@ -57,6 +60,12 @@ export class AppService {
 
   private async showRateLimit() {
     console.log(await this.rateLimitService.getInfo());
+  }
+
+  private showInfo() {
+    const withGithubToken = !!process.env.GITHUB_TOKEN;
+
+    console.log(`Use GITHUB_TOKEN env: ${withGithubToken ? chalk.green('yes') : chalk.red('no')}`);
   }
 
 }
