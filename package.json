@@ -11,7 +11,9 @@
     "build:watch": "tsc -w",
     "start": "ts-node ./src/app.js",
     "start:built": "node ./build/src/app.js",
-    "prepublish": "tsc"
+    "prepublish": "tsc",
+    "lint": "tslint -p .",
+    "lint:fix": "tslint -p . --fix"
   },
   "author": "Uladzimir Aleshka <uladzimir.aleshka@gmail.com>",
   "repository": {
@@ -49,6 +51,7 @@
   },
   "devDependencies": {
     "@types/node": "^12.0.2",
+    "tslint": "^5.16.0",
     "typescript": "^3.4.5"
   }
 }

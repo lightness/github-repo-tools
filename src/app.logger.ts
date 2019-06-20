@@ -1,4 +1,4 @@
-import { LoggerService } from "@nestjs/common";
+import { LoggerService } from '@nestjs/common';
 
 export class AppLogger implements LoggerService {
   

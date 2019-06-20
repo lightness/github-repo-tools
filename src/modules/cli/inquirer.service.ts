@@ -47,13 +47,13 @@ export class InquirerService {
         return {
           node: true,
           ...await this.promptNode(),
-        }
+        };
       case 'package':
         return this.promptPackage();
       case 'rate-limits':
         return {
           rateLimit: true,
-        }
+        };
       default:
         return {};
     }

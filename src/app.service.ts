@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import chalk from 'chalk';
-import { CliService } from "./modules/cli/cli.service";
-import { NodeVersionService } from "./modules/node-version/node.version.service";
-import { INodeVersion } from "./modules/node-version/interfaces";
-import { IProgramOptions, IReportItem } from "./interfaces";
-import { TableService } from "./modules/table/table.service";
-import { getFilter } from "./util/result-filter";
-import { IPacakgeVersion } from "./modules/npm-dependency-version/interfaces";
-import { NpmDependencyVersionService } from "./modules/npm-dependency-version/npm.dependency.version.service";
-import { RateLimitService } from "./modules/rate-limit/rate.limit.service";
+import { CliService } from './modules/cli/cli.service';
+import { NodeVersionService } from './modules/node-version/node.version.service';
+import { INodeVersion } from './modules/node-version/interfaces';
+import { IProgramOptions, IReportItem } from './interfaces';
+import { TableService } from './modules/table/table.service';
+import { getFilter } from './util/result-filter';
+import { IPacakgeVersion } from './modules/npm-dependency-version/interfaces';
+import { NpmDependencyVersionService } from './modules/npm-dependency-version/npm.dependency.version.service';
+import { RateLimitService } from './modules/rate-limit/rate.limit.service';
 
 @Injectable()
 export class AppService {
@@ -52,7 +52,7 @@ export class AppService {
   }
 
   private handleReport(report: IReportItem[], options: IProgramOptions) {
-    const filteredReport: INodeVersion[] = report.filter(getFilter(options))
+    const filteredReport: INodeVersion[] = report.filter(getFilter(options));
     const output: string = this.tableService.format(filteredReport, options);
 
     console.log(output);

@@ -45,7 +45,7 @@ export class PackageLockVersionService {
       versions.push({
         host: '<root>',
         version: rootVersion,
-      })
+      });
     }
 
     return versions.map(({ host, version }) => `${version} for ${host}`).join('\n');

@@ -1,0 +1,7 @@
+{
+  "rules": {
+      "indent": true,
+      "semicolon": true,
+      "eofline": true
+  }
+}

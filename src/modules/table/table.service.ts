@@ -67,7 +67,7 @@ export class TableService {
   }
 
   private orderColumns() {
-    return (fieldA, fieldB) => (this.ORDER[fieldB] || 0) - (this.ORDER[fieldA] || 0)
+    return (fieldA, fieldB) => (this.ORDER[fieldB] || 0) - (this.ORDER[fieldA] || 0);
   }
 
 }
