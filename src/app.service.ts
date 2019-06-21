@@ -1,21 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import chalk from 'chalk';
 import { CliService } from './modules/cli/cli.service';
 import { NodeVersionService } from './modules/node-version/node.version.service';
 import { INodeVersion } from './modules/node-version/interfaces';
-import { IProgramOptions, IReportItem } from './interfaces';
-import { TableService } from './modules/table/table.service';
-import { getFilter } from './util/result-filter';
+import { IProgramOptions } from './interfaces';
 import { IPacakgeVersion } from './modules/npm-dependency-version/interfaces';
 import { NpmDependencyVersionService } from './modules/npm-dependency-version/npm.dependency.version.service';
 import { RateLimitService } from './modules/rate-limit/rate.limit.service';
+import { PresenterService } from './modules/presenter/presenter.service';
+import { PresentationMode } from './modules/presenter/interfaces';
 
 @Injectable()
 export class AppService {
 
   constructor(
     private cliService: CliService,
-    private tableService: TableService,
+    private presenterService: PresenterService,
     private rateLimitService: RateLimitService,
     private nodeVersionService: NodeVersionService,
     private npmDependencyVersionService: NpmDependencyVersionService,
@@ -23,49 +22,61 @@ export class AppService {
   }
 
   public async main() {
-    const options = await this.cliService.getProgramOptions();
-    const { package: packageName, node, rateLimit } = options;
+    const options: IProgramOptions = await this.cliService.getProgramOptions();
 
-    this.showInfo();
+    this.setupPresenter(options);
+
+    this.presenterService.showFiglet();
+    this.presenterService.showGithubTokenInfo();
+
+    const { package: packageName, node, rateLimit } = options;
 
     if (node) {
       return this.nodeCase(options);
     } else if (packageName) {
       return this.packageCase(options);
     } else if (rateLimit) {
-      return this.showRateLimit();
+      return this.showRateLimit(true);
     } else {
-      console.log('Wrong input');
+      this.presenterService.showError('Wrong input');
     }
   }
 
   private async nodeCase(options: IProgramOptions) {
     const report: INodeVersion[] = await this.nodeVersionService.getReport(options);
-    this.handleReport(report, options);
-    this.showRateLimit();
+    this.presenterService.showData(report, options);
+    this.showRateLimit(false);
   }
 
   private async packageCase(options: IProgramOptions) {
     const report: IPacakgeVersion[] = await this.npmDependencyVersionService.getReport(options);
-    this.handleReport(report, options);
-    this.showRateLimit();
+    this.presenterService.showData(report, options);
+    this.showRateLimit(false);
   }
 
-  private handleReport(report: IReportItem[], options: IProgramOptions) {
-    const filteredReport: INodeVersion[] = report.filter(getFilter(options));
-    const output: string = this.tableService.format(filteredReport, options);
+  private async showRateLimit(isMainInfo: boolean) {
+    const rateLimit = await this.rateLimitService.getRateLimit();
 
-    console.log(output);
+    this.presenterService.showRateLimit(rateLimit, isMainInfo);
   }
 
-  private async showRateLimit() {
-    console.log(await this.rateLimitService.getInfo());
+  private setupPresenter(options: IProgramOptions) {
+    const presentationMode: PresentationMode = this.getPresentationMode(options);
+    PresenterService.setMode(presentationMode);
   }
 
-  private showInfo() {
-    const withGithubToken = !!process.env.GITHUB_TOKEN;
+  private getPresentationMode(options: IProgramOptions): PresentationMode {
+    const { json, rawJson } = options;
 
-    console.log(`Use GITHUB_TOKEN env: ${withGithubToken ? chalk.green('yes') : chalk.red('no')}`);
+    if (rawJson) {
+      return PresentationMode.RAW_JSON;
+    }
+
+    if (json) {
+      return PresentationMode.JSON;
+    }
+
+    return PresentationMode.DEFAULT;
   }
 
 }

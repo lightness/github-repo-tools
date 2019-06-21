@@ -1,37 +1,114 @@
-import * as program from 'commander';
+import * as yargs from 'yargs';
 import { Injectable } from '@nestjs/common';
-import * as packageJson from '../../../package.json';
 import { IProgramOptions } from '../../interfaces.js';
 
 @Injectable()
 export class CommanderService {
 
   public getProgramOptions(): IProgramOptions {
-    function collect(val, memo) {
-      memo.push(...val.split(','));
-      return memo;
+    const argv = yargs
+      .usage('Search npm packages in all org repos. You can set GITHUB_TOKEN env var, if public access restricted')
+      .help('help')
+      .alias('h', 'help')
+      .showHelpOnFail(false, "Specify --help for available options")
+      .version()
+      .alias('v', 'version')
+      .describe('v', 'show version information')
+      .option('org', {
+        alias: 'o',
+        describe: 'github org where search applied',
+        type: 'string',
+      })
+      .option('user', {
+        alias: 'u',
+        describe: 'github user where search applied',
+        type: 'string',
+      })
+      .option('package', {
+        alias: 'p',
+        describe: 'package to search',
+        type: 'string',
+      })
+      .option('deps', {
+        describe: 'disable search in "dependencies" package.json field',
+        default: true,
+        type: 'boolean',
+      })
+      .option('dev-deps', {
+        describe: 'disable search in "devDependencies" package.json field',
+        default: true,
+        type: 'boolean',
+      })
+      .option('peer-deps', {
+        describe: 'disable search in "peerDependencies" package.json field',
+        default: true,
+        type: 'boolean',
+      })
+      .option('yarn-lock', {
+        describe: 'disable search in yarn.lock',
+        default: true,
+        type: 'boolean',
+      })
+      .option('package-lock', {
+        describe: 'disable search in package-lock.json',
+        default: true,
+        type: 'boolean',
+      })
+      .option('node', {
+        alias: 'n',
+        describe: 'search node version based on .nvmrc and package.json engines',
+      })
+      .options('nvm', {
+        describe: 'disable search in .nvmrc',
+        default: true,
+        type: 'boolean',
+      })
+      .options('engines', {
+        describe: 'disable search in package.json engines',
+        default: true,
+        type: 'boolean',
+      })
+      .option('rate-limit', {
+        alias: 'l',
+        describe: 'show rate limit',
+      })
+      .option('skip-empty', {
+        describe: 'skip repo, if package/node not found',
+        default: true,
+        type: 'boolean',
+      })
+      .option('skip-error', {
+        describe: 'skip repo, if error with such code occured',
+        default: [404],
+        type: 'array'
+      })
+      .option('raw-json', {
+        describe: 'show output as json without whitespaces',
+        default: false,
+        type: 'boolean',
+      })
+      .option('json', {
+        describe: 'show output as prettified json',
+        default: false,
+        type: 'boolean',
+      })
+      .group(['user', 'org'], 'Owner:')
+      .group(['package', 'deps', 'dev-deps', 'peer-deps', 'yarn-lock', 'package-lock'], 'NPM package:')
+      .group(['node', 'nvm', 'engines'], 'Node version:')
+      .check(this.validation)
+      .argv;
+
+    return argv as IProgramOptions;
+  }
+
+  validation(argv: IProgramOptions) {
+    const { user, org } = argv;
+
+    if (user && org) {
+      throw new Error('You should specify either user or org. Not both');
     }
 
-    program
-      .version(packageJson.version, '-v, --version')
-      .description('Search npm packages in all org repos. You can set GITHUB_TOKEN env var, if public access restricted')
-      .option('-o, --org <org>', 'github org where search applied')
-      .option('-u, --user <user>', 'github user where search applied')
-      .option('-p, --package <package>', 'package to search')
-      .option('--no-deps', 'disable search in "dependencies" package.json field')
-      .option('--no-dev-deps', 'disable search in "devDependencies" package.json field')
-      .option('--no-peer-deps', 'disable search in "peerDependencies" package.json field')
-      .option('--no-yarn-lock', 'disable search in yarn.lock')
-      .option('--no-package-lock', 'disable search in package-lock.json')
-      .option('--no-skip-empty', 'not skip repo, if package not found')
-      .option('--skip-error <errorToSkip>', 'skip repo, if error with such code occured', collect, ['404'])
-      .option('-n, --node', 'search node version based on .nvmrc and package.json engines')
-      .option('--no-nvm', 'disable search in .nvmrc')
-      .option('--no-engines', 'disable search in package.json engines')
-      .option('-l, --rate-limit', 'show rate limit')
-      .parse(process.argv);
-
-    return program as IProgramOptions;
+    return true;
   }
 
 }

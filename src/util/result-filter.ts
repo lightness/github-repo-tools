@@ -1,7 +1,7 @@
 import { IFilterOptions } from "../interfaces";
 
 export function getFilter({ skipError, skipEmpty }: IFilterOptions) {
-  const filterError = ({ error }) => !error || (skipError instanceof Array ? !skipError.includes(error) : !skipError);
+  const filterError = ({ error }) => !error || (skipError instanceof Array ? !skipError.includes(+error) : !skipError);
 
   // console.log(skipEmpty);
   const filterEmpty = (item) => {

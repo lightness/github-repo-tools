@@ -1,10 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import * as Octokit from '@octokit/rest';
 import * as RetryPlugin from '@octokit/plugin-retry';
-import * as ora from 'ora';
+import { PresenterService } from "../presenter/presenter.service";
 
 @Injectable()
 export class OctokitService {
+
+  constructor(
+    private presentationService: PresenterService,
+  ) {
+  }
 
   private octokitInstance: Octokit;
 
@@ -47,17 +52,15 @@ export class OctokitService {
       ? this.octokit.repos.listForOrg.endpoint.merge({ org })
       : this.octokit.repos.listForUser.endpoint.merge({ username: user });
 
-    const spinner = ora({ prefixText: 'Searching for repos...' }).start();
+    this.presentationService.showSpinner('Searching for repos...');
     try {
       const repos = await this.octokit.paginate(options);
-      spinner.text = `${repos.length} found`;
-      spinner.succeed();
+      this.presentationService.hideSpinner({ success: true, message: `${repos.length} repos found` });
 
       return repos.map(repo => repo.name);
     }
     catch (e) {
-      spinner.text = `${e.status}`;
-      spinner.fail();
+      this.presentationService.hideSpinner({ success: false, message: `${e.status}` });
 
       return null;
     }

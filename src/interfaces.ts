@@ -1,6 +1,6 @@
 export interface IFilterOptions {
   skipEmpty?: boolean;
-  skipError?: string[];
+  skipError?: number[];
 }
 
 export interface IOwnerOptions {
@@ -23,7 +23,12 @@ export interface INodeOptions {
   engines?: boolean;
 }
 
-export interface IProgramOptions extends IFilterOptions, IOwnerOptions, IPackageOptions, INodeOptions {
+export interface IPresenterOptions {
+  json?: number;
+  rawJson?: boolean;
+}
+
+export interface IProgramOptions extends IFilterOptions, IOwnerOptions, IPackageOptions, INodeOptions, IPresenterOptions {
   rateLimit?: boolean;
 }
 

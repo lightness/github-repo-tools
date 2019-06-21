@@ -3,11 +3,13 @@ import { OctokitModule } from "../octokit/octokit.module";
 import { NpmDependencyVersionService } from "./npm.dependency.version.service";
 import { PackageLockVersionService } from "./package.lock.version.service";
 import { YarnLockVersionService } from "./yarn.lock.version.service";
+import { PresenterModule } from "../presenter/presenter.module";
 
 
 @Module({
   imports: [
-    OctokitModule
+    OctokitModule,
+    PresenterModule,
   ],
   providers: [
     NpmDependencyVersionService,

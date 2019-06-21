@@ -1,6 +1,6 @@
 {
   "name": "github-repo-tools",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "Useful tool to get versions from all repos of Github user/org",
   "main": "build/src/app.js",
   "bin": {
@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
-    "start": "ts-node ./src/app.js",
+    "start": "ts-node ./src/app.ts",
     "start:built": "node ./build/src/app.js",
     "prepublish": "tsc",
     "lint": "tslint -p .",
@@ -44,7 +44,8 @@
     "moment": "^2.24.0",
     "ora": "^3.4.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.5.2"
+    "rxjs": "^6.5.2",
+    "yargs": "^13.2.4"
   },
   "engines": {
     "node": "8.16.0"
