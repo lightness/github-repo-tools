@@ -1,17 +1,17 @@
 {
   "name": "github-repo-tools",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Useful tool to get versions from all repos of Github user/org",
-  "main": "build/src/app.js",
+  "main": "build/app.js",
   "bin": {
-    "grt": "./build/src/app.js"
+    "grt": "./build/app.js"
   },
   "scripts": {
     "clean": "rimraf ./build",
     "build": "tsc",
     "build:watch": "tsc -w",
     "start": "ts-node ./src/app.ts",
-    "start:built": "node ./build/src/app.js",
+    "start:built": "node ./build/app.js",
     "prepublish": "npm run clean && npm run build",
     "lint": "tslint -p .",
     "lint:fix": "tslint -p . --fix"
