@@ -1,14 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import * as ora from 'ora';
 import { IProgramOptions } from "../../interfaces";
 import { INodeVersion } from "./interfaces";
 import { OctokitService } from "../octokit/octokit.service";
+import { PresenterService } from "../presenter/presenter.service";
 
 @Injectable()
 export class NodeVersionService {
 
   constructor(
     private octokitService: OctokitService,
+    private presenterService: PresenterService,
   ) {
   }
 
@@ -21,10 +22,8 @@ export class NodeVersionService {
       return null;
     }
 
-    const sources = [nvm && '.nvmrc', engines && 'package.json engines'].filter(x => x).join(' and ');
-    console.log(`Search node version from ${sources}`);
-
-    const spinner = ora({ prefixText: `Search for ${sources} in every repo...` }).start();
+    this.presenterService.showSearchNodeVersion({ nvm, engines });
+    this.presenterService.showSpinner(`Search in every repo...`);
     const result = await Promise.all(
       repos.map(async repo => {
         try {
@@ -33,21 +32,24 @@ export class NodeVersionService {
             engines ? this.getEngines(org || user, repo).catch(() => null) : null
           ]);
 
-          return {
-            repo,
-            nvmVersion,
-            enginesVersion,
-          };
+          const data: INodeVersion = { repo };
+
+          if (nvm) {
+            data.nvmVersion = nvmVersion;
+          }
+
+          if (engines) {
+            data.enginesVersion = enginesVersion;
+          }
+
+          return data;
         }
         catch (e) {
-          return {
-            repo,
-            error: e.message,
-          };
+          return { repo, error: e.message };
         }
       })
     );
-    spinner.succeed();
+    this.presenterService.hideSpinner({ success: true });
 
     return result;
   }
