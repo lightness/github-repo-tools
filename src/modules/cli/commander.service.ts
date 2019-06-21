@@ -92,6 +92,9 @@ export class CommanderService {
         default: false,
         type: 'boolean',
       })
+      .group(['user', 'org'], 'Owner:')
+      .group(['package', 'deps', 'dev-deps', 'peer-deps', 'yarn-lock', 'package-lock'], 'NPM package:')
+      .group(['node', 'nvm', 'engines'], 'Node version:')
       .check(this.validation)
       .argv;
 
