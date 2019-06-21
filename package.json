@@ -7,11 +7,12 @@
     "grt": "./build/src/app.js"
   },
   "scripts": {
+    "clean": "rimraf ./build",
     "build": "tsc",
     "build:watch": "tsc -w",
     "start": "ts-node ./src/app.ts",
     "start:built": "node ./build/src/app.js",
-    "prepublish": "tsc",
+    "prepublish": "npm run clean && npm run build",
     "lint": "tslint -p .",
     "lint:fix": "tslint -p . --fix"
   },
@@ -44,6 +45,7 @@
     "moment": "^2.24.0",
     "ora": "^3.4.0",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "^2.6.3",
     "rxjs": "^6.5.2",
     "yargs": "^13.2.4"
   },
