@@ -19,8 +19,6 @@ export class OctokitService {
   public async getOctokit() {
     const { token } = await this.cliService.getProgramOptions();
 
-    console.log('TOKEN', token);
-
     return new (Octokit.plugin(RetryPlugin))({
       auth: token,
       retry: {
