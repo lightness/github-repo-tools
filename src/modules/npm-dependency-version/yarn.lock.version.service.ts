@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import * as lockfile from '@yarnpkg/lockfile';
-import { OctokitService } from "../octokit/octokit.service";
+import { OctokitService } from '../octokit/octokit.service';
 
 @Injectable()
 export class YarnLockVersionService {

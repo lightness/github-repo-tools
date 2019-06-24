@@ -1,8 +1,8 @@
 import * as Octokit from '@octokit/rest';
-import { Injectable } from "@nestjs/common";
-import { IPresenterService } from "./interfaces";
-import { IReportItem, IProgramOptions } from "../../interfaces";
-import { getFilter } from "../../util/result-filter";
+import { Injectable } from '@nestjs/common';
+import { IPresenterService } from './interfaces';
+import { IReportItem, IProgramOptions } from '../../interfaces';
+import { getFilter } from '../../util/result-filter';
 
 @Injectable()
 export class RawJsonPresenterService implements IPresenterService {

@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { IProgramOptions } from "../../interfaces";
-import { INodeVersion } from "./interfaces";
-import { OctokitService } from "../octokit/octokit.service";
-import { PresenterService } from "../presenter/presenter.service";
+import { Injectable } from '@nestjs/common';
+import { IProgramOptions } from '../../interfaces';
+import { INodeVersion } from './interfaces';
+import { OctokitService } from '../octokit/octokit.service';
+import { PresenterService } from '../presenter/presenter.service';
 
 @Injectable()
 export class NodeVersionService {

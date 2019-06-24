@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import * as Octokit from '@octokit/rest';
-import { PresentationMode, IPresenterService } from "./interfaces";
-import { DefaultPresenterService } from "./default.presenter.service";
-import { JsonPresenterService } from "./json.presenter.service";
-import { IReportItem, IProgramOptions } from "../../interfaces";
-import { RawJsonPresenterService } from "./raw.json.presenter.service";
+import { PresentationMode, IPresenterService } from './interfaces';
+import { DefaultPresenterService } from './default.presenter.service';
+import { JsonPresenterService } from './json.presenter.service';
+import { IReportItem, IProgramOptions } from '../../interfaces';
+import { RawJsonPresenterService } from './raw.json.presenter.service';
 
 @Injectable()
 export class PresenterService implements IPresenterService {
@@ -37,8 +37,8 @@ export class PresenterService implements IPresenterService {
     this.presenter.showFiglet();
   }
 
-  public showGithubTokenInfo() {
-    this.presenter.showGithubTokenInfo();
+  public showGithubTokenInfo(options: IProgramOptions) {
+    this.presenter.showGithubTokenInfo(options);
   }
 
   public showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate, isMainInfo: boolean) {

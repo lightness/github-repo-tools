@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { Memoize } from 'lodash-decorators';
 import { IProgramOptions } from '../../interfaces';
 import { CommanderService } from './commander.service';
 import { InquirerService } from './inquirer.service';
 import { InputValidatorService } from './input.validator.service';
-import { InvalidResult, ValidResult } from './interfaces';
+import { InvalidResult } from './interfaces';
 
 @Injectable()
 export class CliService {
@@ -15,10 +16,11 @@ export class CliService {
   ) {
   }
 
-  public async getProgramOptions(): Promise<IProgramOptions> {
+  @Memoize()
+  public getProgramOptions(): Promise<IProgramOptions> {
     const options = this.commanderService.getProgramOptions();
 
-    return await this.patchOptions(options);
+    return this.patchOptions(options);
   }
 
   public async patchOptions(options): Promise<IProgramOptions> {

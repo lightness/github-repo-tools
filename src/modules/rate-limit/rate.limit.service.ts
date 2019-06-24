@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { OctokitService } from "../octokit/octokit.service";
+import { Injectable } from '@nestjs/common';
+import { OctokitService } from '../octokit/octokit.service';
 import { PresenterService } from '../presenter/presenter.service';
 
 @Injectable()
@@ -14,7 +14,8 @@ export class RateLimitService {
   public async getRateLimit() {
     this.presenterService.showSpinner('Getting rate limits info');
 
-    const response = await this.octokitService.octokit.rateLimit.get();
+    const octokit = await this.octokitService.getOctokit();
+    const response = await octokit.rateLimit.get();
 
     this.presenterService.hideSpinner({ success: true, message: 'Rate limits info received' });
 

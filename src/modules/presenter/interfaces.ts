@@ -9,7 +9,7 @@ export enum PresentationMode {
 
 export interface IPresenterService {
   showFiglet();
-  showGithubTokenInfo();
+  showGithubTokenInfo(options: IProgramOptions);
   showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate, isMainInfo: boolean);
   showError(message: string);
   showData(report: IReportItem[], options: IProgramOptions);

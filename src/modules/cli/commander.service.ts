@@ -10,7 +10,7 @@ export class CommanderService {
       .usage('Search npm packages in all org repos. You can set GITHUB_TOKEN env var, if public access restricted')
       .help('help')
       .alias('h', 'help')
-      .showHelpOnFail(false, "Specify --help for available options")
+      .showHelpOnFail(false, 'Specify --help for available options')
       .version()
       .alias('v', 'version')
       .describe('v', 'show version information')
@@ -91,6 +91,12 @@ export class CommanderService {
         describe: 'show output as prettified json',
         default: false,
         type: 'boolean',
+      })
+      .option('token', {
+        alias: 't',
+        describe: 'token to auth on github. Env var GITHUB_TOKEN strictly prefered',
+        default: process.env.GITHUB_TOKEN,
+        type: 'string'
       })
       .group(['user', 'org'], 'Owner:')
       .group(['package', 'deps', 'dev-deps', 'peer-deps', 'yarn-lock', 'package-lock'], 'NPM package:')

@@ -1,4 +1,4 @@
-import { IFilterOptions } from "../interfaces";
+import { IFilterOptions } from '../interfaces';
 
 export function getFilter({ skipError, skipEmpty }: IFilterOptions) {
   const filterError = ({ error }) => !error || (skipError instanceof Array ? !skipError.includes(+error) : !skipError);

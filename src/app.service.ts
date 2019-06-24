@@ -27,7 +27,7 @@ export class AppService {
     this.setupPresenter(options);
 
     this.presenterService.showFiglet();
-    this.presenterService.showGithubTokenInfo();
+    this.presenterService.showGithubTokenInfo(options);
 
     const { package: packageName, node, rateLimit } = options;
 

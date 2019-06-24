@@ -3,11 +3,12 @@ import * as moment from 'moment';
 import * as Octokit from '@octokit/rest';
 import * as ora from 'ora';
 import chalk from 'chalk';
-import { TableService } from "../table/table.service";
-import { IPresenterService } from "./interfaces";
+import { Injectable } from '@nestjs/common';
+import { TableService } from '../table/table.service';
+import { IPresenterService } from './interfaces';
 import { IReportItem, IProgramOptions } from '../../interfaces';
 import { getFilter } from '../../util/result-filter';
-import { Injectable } from '@nestjs/common';
+import { CliService } from '../cli/cli.service';
 
 @Injectable()
 export class DefaultPresenterService implements IPresenterService {
@@ -25,8 +26,8 @@ export class DefaultPresenterService implements IPresenterService {
     console.log(figlet.textSync('Github Repo Tools'));
   }
 
-  public showGithubTokenInfo() {
-    const withGithubToken = !!process.env.GITHUB_TOKEN;
+  public showGithubTokenInfo(options: IProgramOptions) {
+    const withGithubToken = !!options.token;
 
     console.log(`Use GITHUB_TOKEN env: ${withGithubToken ? chalk.green('yes') : chalk.red('no')}`);
   }

@@ -1,7 +1,7 @@
-import { Module } from "@nestjs/common";
-import { OctokitModule } from "../octokit/octokit.module";
-import { NodeVersionService } from "./node.version.service";
-import { PresenterModule } from "../presenter/presenter.module";
+import { Module } from '@nestjs/common';
+import { OctokitModule } from '../octokit/octokit.module';
+import { NodeVersionService } from './node.version.service';
+import { PresenterModule } from '../presenter/presenter.module';
 
 @Module({
   imports: [
