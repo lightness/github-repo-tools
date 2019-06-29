@@ -33,6 +33,10 @@ export class DefaultPresenterService implements IPresenterService {
   }
 
   public showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate) {
+    if (!rateLimit) {
+      return;
+    }
+
     const { limit, remaining, reset } = rateLimit;
     const resetMoment = moment(reset * 1000);
     const resetIn = resetMoment.fromNow();
@@ -46,6 +50,10 @@ export class DefaultPresenterService implements IPresenterService {
   }
 
   public showData(report: IReportItem[], options: IProgramOptions) {
+    if (!report) {
+      return;
+    }
+
     const filteredReport: IReportItem[] = report.filter(getFilter(options));
     const output: string = this.tableService.format(filteredReport, options);
 

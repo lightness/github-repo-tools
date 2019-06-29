@@ -14,12 +14,17 @@ export class RateLimitService {
   public async getRateLimit() {
     this.presenterService.showSpinner('Getting rate limits info');
 
-    const octokit = await this.octokitService.getOctokit();
-    const response = await octokit.rateLimit.get();
+    try {
+      const octokit = await this.octokitService.getOctokit();
+      const response = await octokit.rateLimit.get();
 
-    this.presenterService.hideSpinner({ success: true, message: 'Rate limits info received' });
+      this.presenterService.hideSpinner({ success: true, message: 'Rate limits info received' });
 
-    return response.data.rate;
+      return response.data.rate;
+    } catch (e) {
+      this.presenterService.hideSpinner({ success: false, message: 'Rate limits not received' });
+      return null;
+    }
   }
 
 }
