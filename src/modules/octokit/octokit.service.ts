@@ -1,34 +1,37 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import * as Octokit from '@octokit/rest';
 import * as RetryPlugin from '@octokit/plugin-retry';
-import { PresenterService } from "../presenter/presenter.service";
+import { PresenterService } from '../presenter/presenter.service';
+import { CliService } from '../cli/cli.service';
+import { Memoize } from 'lodash-decorators';
+import { ClientHttp2Stream } from 'http2';
 
 @Injectable()
 export class OctokitService {
 
   constructor(
     private presentationService: PresenterService,
+    private cliService: CliService,
   ) {
   }
 
-  private octokitInstance: Octokit;
+  @Memoize()
+  public async getOctokit() {
+    const { token } = await this.cliService.getProgramOptions();
 
-  public get octokit() {
-    if (!this.octokitInstance) {
-      this.octokitInstance = new (Octokit.plugin(RetryPlugin))({
-        auth: process.env.GITHUB_TOKEN,
-        retry: {
-          doNotRetry: [404],
-        }
-      });
-    }
-
-    return this.octokitInstance;
+    return new (Octokit.plugin(RetryPlugin))({
+      auth: token,
+      retry: {
+        doNotRetry: [404],
+      }
+    });
   }
 
   public async getFileContent(owner, repo, path) {
+    const octokit = await this.getOctokit();
+
     try {
-      const response = await this.octokit.repos.getContents({
+      const response = await octokit.repos.getContents({
         owner,
         repo,
         path,
@@ -48,13 +51,15 @@ export class OctokitService {
   }
 
   public async getRepos({ org, user }: { org: string, user: string }): Promise<string[] | null> {
+    const octokit = await this.getOctokit();
+
     const options = org
-      ? this.octokit.repos.listForOrg.endpoint.merge({ org })
-      : this.octokit.repos.listForUser.endpoint.merge({ username: user });
+      ? octokit.repos.listForOrg.endpoint.merge({ org })
+      : octokit.repos.listForUser.endpoint.merge({ username: user });
 
     this.presentationService.showSpinner('Searching for repos...');
     try {
-      const repos = await this.octokit.paginate(options);
+      const repos = await octokit.paginate(options);
       this.presentationService.hideSpinner({ success: true, message: `${repos.length} repos found` });
 
       return repos.map(repo => repo.name);

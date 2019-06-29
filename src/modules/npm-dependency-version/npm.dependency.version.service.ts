@@ -1,11 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import chalk from 'chalk';
-import { IProgramOptions, IPackageOptions } from "../../interfaces";
-import { OctokitService } from "../octokit/octokit.service";
-import { PackageLockVersionService } from "./package.lock.version.service";
-import { YarnLockVersionService } from "./yarn.lock.version.service";
-import { PresenterService } from "../presenter/presenter.service";
-import { IPacakgeVersion as IPackageVersion } from "./interfaces";
+import { IProgramOptions, IPackageOptions } from '../../interfaces';
+import { OctokitService } from '../octokit/octokit.service';
+import { PackageLockVersionService } from './package.lock.version.service';
+import { YarnLockVersionService } from './yarn.lock.version.service';
+import { PresenterService } from '../presenter/presenter.service';
+import { IPacakgeVersion as IPackageVersion } from './interfaces';
 
 @Injectable()
 export class NpmDependencyVersionService {

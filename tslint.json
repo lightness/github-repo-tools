@@ -2,6 +2,7 @@
   "rules": {
       "indent": true,
       "semicolon": true,
-      "eofline": true
+      "eofline": true,
+      "quotemark": [true, "single"]
   }
 }

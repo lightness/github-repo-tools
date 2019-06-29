@@ -1,4 +1,4 @@
-import { IReportItem } from "../../interfaces";
+import { IReportItem } from '../../interfaces';
 
 export interface IPacakgeVersion extends IReportItem {
   version?: string;

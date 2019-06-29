@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { IProgramOptions, IOwnerOptions } from "../../interfaces";
-import { Mode, ValidationResult } from "./interfaces";
+import { Injectable } from '@nestjs/common';
+import { IProgramOptions, IOwnerOptions } from '../../interfaces';
+import { Mode, ValidationResult } from './interfaces';
 
 @Injectable()
 export class InputValidatorService {

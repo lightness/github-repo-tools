@@ -1,19 +1,19 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import * as Table from 'cli-table3';
 import * as changeCase from 'change-case';
-import { IProgramOptions, IReportItem } from "../../interfaces";
+import { IProgramOptions, IReportItem } from '../../interfaces';
 
 @Injectable()
 export class TableService {
 
   private readonly ORDER = Object.freeze({
-    "repo": Number.MIN_VALUE,
-    "version": -10,
-    "packageLockVersion": -11,
-    "yarnLockVersion": -12,
-    "nvmVersion": -7,
-    "enginesVersion": -6,
-    "error": Number.MAX_VALUE,
+    'repo': Number.MIN_VALUE,
+    'version': -10,
+    'packageLockVersion': -11,
+    'yarnLockVersion': -12,
+    'nvmVersion': -7,
+    'enginesVersion': -6,
+    'error': Number.MAX_VALUE,
   });
 
   public format(data: IReportItem[], options: IProgramOptions): string {

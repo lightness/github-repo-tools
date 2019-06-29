@@ -3,11 +3,12 @@ import * as moment from 'moment';
 import * as Octokit from '@octokit/rest';
 import * as ora from 'ora';
 import chalk from 'chalk';
-import { TableService } from "../table/table.service";
-import { IPresenterService } from "./interfaces";
+import { Injectable } from '@nestjs/common';
+import { TableService } from '../table/table.service';
+import { IPresenterService } from './interfaces';
 import { IReportItem, IProgramOptions } from '../../interfaces';
 import { getFilter } from '../../util/result-filter';
-import { Injectable } from '@nestjs/common';
+import { CliService } from '../cli/cli.service';
 
 @Injectable()
 export class DefaultPresenterService implements IPresenterService {
@@ -25,13 +26,17 @@ export class DefaultPresenterService implements IPresenterService {
     console.log(figlet.textSync('Github Repo Tools'));
   }
 
-  public showGithubTokenInfo() {
-    const withGithubToken = !!process.env.GITHUB_TOKEN;
+  public showGithubTokenInfo(options: IProgramOptions) {
+    const withGithubToken = !!options.token;
 
     console.log(`Use GITHUB_TOKEN env: ${withGithubToken ? chalk.green('yes') : chalk.red('no')}`);
   }
 
   public showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate) {
+    if (!rateLimit) {
+      return;
+    }
+
     const { limit, remaining, reset } = rateLimit;
     const resetMoment = moment(reset * 1000);
     const resetIn = resetMoment.fromNow();
@@ -45,6 +50,11 @@ export class DefaultPresenterService implements IPresenterService {
   }
 
   public showData(report: IReportItem[], options: IProgramOptions) {
+    if (!report) {
+      console.log('No data found');
+      return;
+    }
+
     const filteredReport: IReportItem[] = report.filter(getFilter(options));
     const output: string = this.tableService.format(filteredReport, options);
 

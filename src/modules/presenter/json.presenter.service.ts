@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { RawJsonPresenterService } from "./raw.json.presenter.service";
+import { Injectable } from '@nestjs/common';
+import { RawJsonPresenterService } from './raw.json.presenter.service';
 
 @Injectable()
 export class JsonPresenterService extends RawJsonPresenterService {

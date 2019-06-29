@@ -30,6 +30,7 @@ export interface IPresenterOptions {
 
 export interface IProgramOptions extends IFilterOptions, IOwnerOptions, IPackageOptions, INodeOptions, IPresenterOptions {
   rateLimit?: boolean;
+  token?: string;
 }
 
 export interface IReportItem {
