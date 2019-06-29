@@ -51,6 +51,7 @@ export class DefaultPresenterService implements IPresenterService {
 
   public showData(report: IReportItem[], options: IProgramOptions) {
     if (!report) {
+      console.log('No data found');
       return;
     }
 

@@ -27,6 +27,11 @@ export class RawJsonPresenterService implements IPresenterService {
   }
 
   public showData(report: IReportItem[], options: IProgramOptions) {
+    if (!report) {
+      this.log({ error: 'No data found' });
+      return;
+    }
+
     const filteredReport: IReportItem[] = report.filter(getFilter(options));
 
     this.log(filteredReport);
