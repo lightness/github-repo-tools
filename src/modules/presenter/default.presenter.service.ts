@@ -3,33 +3,38 @@ import * as moment from 'moment';
 import * as Octokit from '@octokit/rest';
 import * as ora from 'ora';
 import chalk from 'chalk';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { TableService } from '../table/table.service';
 import { IPresenterService } from './interfaces';
 import { IReportItem, IProgramOptions } from '../../interfaces';
 import { getFilter } from '../../util/result-filter';
-import { CliService } from '../cli/cli.service';
+import { Writable } from 'stream';
 
 @Injectable()
 export class DefaultPresenterService implements IPresenterService {
   private spinner: ora.Ora = null;
 
-  constructor (
+  constructor(
     private tableService: TableService,
+    @Inject('STREAM') protected stream: Writable,
   ) {
+  }
+
+  public write(str: string) {
+    this.stream.write(str+ '\n');
   }
 
   public configure() {
   }
 
   public showFiglet() {
-    console.log(figlet.textSync('Github Repo Tools'));
+    this.write(figlet.textSync('Github Repo Tools'));
   }
 
   public showGithubTokenInfo(options: IProgramOptions) {
     const withGithubToken = !!options.token;
 
-    console.log(`Use GITHUB_TOKEN env: ${withGithubToken ? chalk.green('yes') : chalk.red('no')}`);
+    this.write(`Use GITHUB_TOKEN env: ${withGithubToken ? chalk.green('yes') : chalk.red('no')}`);
   }
 
   public showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate) {
@@ -42,23 +47,23 @@ export class DefaultPresenterService implements IPresenterService {
     const resetIn = resetMoment.fromNow();
     const resetAt = resetMoment.format('HH:mm');
 
-    console.log(`Remains ${remaining}/${limit} requests. \nLimit will reset at ${resetAt} (${resetIn})`);
+    this.write(`Remains ${remaining}/${limit} requests. \nLimit will reset at ${resetAt} (${resetIn})`);
   }
 
   public showError(message: string) {
-    console.log(message);
+    this.write(message);
   }
 
   public showData(report: IReportItem[], options: IProgramOptions) {
     if (!report) {
-      console.log('No data found');
+      this.write('No data found');
       return;
     }
 
     const filteredReport: IReportItem[] = report.filter(getFilter(options));
     const output: string = this.tableService.format(filteredReport, options);
 
-    console.log(output);
+    this.write(output);
   }
 
   public showSpinner(message: string) {
@@ -80,11 +85,11 @@ export class DefaultPresenterService implements IPresenterService {
   public showSearchNodeVersion({ nvm, engines }: { nvm: boolean, engines: boolean }) {
     const sources = [nvm && '.nvmrc', engines && 'package.json engines'].filter(x => x).join(' and ');
 
-    console.log(`Search node version from ${sources}`);
+    this.write(`Search node version from ${sources}`);
   }
 
   public showSearchPackageVersion(packageName: string) {
-    console.log(`NPM package to search: ${chalk.green(packageName)}`);
+    this.write(`NPM package to search: ${chalk.green(packageName)}`);
   }
 
 }

@@ -12,8 +12,8 @@ export class YarnLockVersionService {
   ) {
   }
 
-  public async getVersion(owner, repo, packageName): Promise<string> {
-    const doc = await this.getYarnLock(owner, repo);
+  public async getVersion(owner, repo, packageName, token?: string): Promise<string> {
+    const doc = await this.getYarnLock(owner, repo, token);
 
     if (doc.type !== 'success') {
       return null;
@@ -68,9 +68,9 @@ export class YarnLockVersionService {
     return allVersions.map(({ host, version }) => `${version} for ${host}`).join('\n');
   }
 
-  private async getYarnLock(owner, repo) {
+  private async getYarnLock(owner, repo, token?: string) {
     try {
-      const content = await this.octokitService.getFileContent(owner, repo, 'yarn.lock');
+      const content = await this.octokitService.getFileContent(owner, repo, 'yarn.lock', token);
 
       return lockfile.parse(content);
     } catch (e) {

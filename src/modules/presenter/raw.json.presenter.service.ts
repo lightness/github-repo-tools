@@ -1,13 +1,20 @@
 import * as Octokit from '@octokit/rest';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { IPresenterService } from './interfaces';
 import { IReportItem, IProgramOptions } from '../../interfaces';
 import { getFilter } from '../../util/result-filter';
+import { Writable } from 'stream';
 
 @Injectable()
 export class RawJsonPresenterService implements IPresenterService {
-  protected log(data: object) {
-    console.log(JSON.stringify(data));
+
+  public constructor(
+    @Inject('STREAM') protected stream: Writable,
+  ) {
+  }
+
+  protected write(data: object) {
+    this.stream.write(JSON.stringify(data));
   }
 
   public showFiglet() {
@@ -18,23 +25,23 @@ export class RawJsonPresenterService implements IPresenterService {
 
   public async showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate, isMainInfo: boolean) {
     if (isMainInfo) {
-      this.log(rateLimit);
+      this.write(rateLimit);
     }
   }
 
   public showError(message: string) {
-    this.log({ error: message });
+    this.write({ error: message });
   }
 
   public showData(report: IReportItem[], options: IProgramOptions) {
     if (!report) {
-      this.log({ error: 'No data found' });
+      this.write({ error: 'No data found' });
       return;
     }
 
     const filteredReport: IReportItem[] = report.filter(getFilter(options));
 
-    this.log(filteredReport);
+    this.write(filteredReport);
   }
 
   public showSpinner() {

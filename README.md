@@ -73,3 +73,18 @@ Options:
   --json            show output as prettified json    [boolean] [default: false]
   -h, --help        Show help                                          [boolean]
 ```
+
+## Use in your app
+
+```js
+const { grt } = require('github-repo-tools');
+
+const response = await grt({ 
+  user: 'lightness',
+  package: 'typescript',
+  yarnLock: false,
+  token: '<GITHUB_TOKEN>',
+});
+```
+
+> TODO: Add more descriptive exmaple

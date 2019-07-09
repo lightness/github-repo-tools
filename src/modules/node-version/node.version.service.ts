@@ -14,9 +14,9 @@ export class NodeVersionService {
   }
 
   public async getReport(options: IProgramOptions): Promise<INodeVersion[]> {
-    const { org, user, nvm, engines } = options;
+    const { org, user, nvm, engines, token } = options;
 
-    const repos = await this.octokitService.getRepos({ org, user });
+    const repos = await this.octokitService.getRepos({ org, user, token });
 
     if (!repos) {
       return null;
@@ -28,8 +28,8 @@ export class NodeVersionService {
       repos.map(async repo => {
         try {
           const [nvmVersion, enginesVersion] = await Promise.all([
-            nvm ? this.getNvmrc(org || user, repo).catch(() => null) : null,
-            engines ? this.getEngines(org || user, repo).catch(() => null) : null
+            nvm ? this.getNvmrc(org || user, repo, token).catch(() => null) : null,
+            engines ? this.getEngines(org || user, repo, token).catch(() => null) : null
           ]);
 
           const data: INodeVersion = { repo };
@@ -54,14 +54,14 @@ export class NodeVersionService {
     return result;
   }
 
-  private async getNvmrc(owner, repo): Promise<string> {
-    const content = await this.octokitService.getFileContent(owner, repo, '.nvmrc');
+  private async getNvmrc(owner, repo, token): Promise<string> {
+    const content = await this.octokitService.getFileContent(owner, repo, '.nvmrc', token);
 
     return content.trim();
   }
 
-  private async getEngines(owner, repo): Promise<string> {
-    const packageJson = await this.octokitService.getPackageJson(owner, repo);
+  private async getEngines(owner, repo, token): Promise<string> {
+    const packageJson = await this.octokitService.getPackageJson(owner, repo, token);
     const engines = packageJson.engines;
 
     if (!engines || !engines.node) {

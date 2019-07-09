@@ -1,24 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import * as Octokit from '@octokit/rest';
 import * as RetryPlugin from '@octokit/plugin-retry';
-import { PresenterService } from '../presenter/presenter.service';
-import { CliService } from '../cli/cli.service';
 import { Memoize } from 'lodash-decorators';
-import { ClientHttp2Stream } from 'http2';
+import { PresenterService } from '../presenter/presenter.service';
 
 @Injectable()
 export class OctokitService {
 
   constructor(
     private presentationService: PresenterService,
-    private cliService: CliService,
   ) {
   }
 
   @Memoize()
-  public async getOctokit() {
-    const { token } = await this.cliService.getProgramOptions();
-
+  public getOctokit(token?: string) {
     return new (Octokit.plugin(RetryPlugin))({
       auth: token,
       retry: {
@@ -27,8 +22,8 @@ export class OctokitService {
     });
   }
 
-  public async getFileContent(owner, repo, path) {
-    const octokit = await this.getOctokit();
+  public async getFileContent(owner, repo, path, token?: string) {
+    const octokit = await this.getOctokit(token);
 
     try {
       const response = await octokit.repos.getContents({
@@ -46,12 +41,12 @@ export class OctokitService {
     }
   }
 
-  public async getPackageJson(owner, repo) {
-    return JSON.parse(await this.getFileContent(owner, repo, 'package.json'));
+  public async getPackageJson(owner, repo, token?: string) {
+    return JSON.parse(await this.getFileContent(owner, repo, 'package.json', token));
   }
 
-  public async getRepos({ org, user }: { org: string, user: string }): Promise<string[] | null> {
-    const octokit = await this.getOctokit();
+  public async getRepos({ org, user, token }: { org: string, user: string, token?: string }): Promise<string[] | null> {
+    const octokit = await this.getOctokit(token);
 
     const options = org
       ? octokit.repos.listForOrg.endpoint.merge({ org })
