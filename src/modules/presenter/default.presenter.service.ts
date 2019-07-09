@@ -14,14 +14,14 @@ import { Writable } from 'stream';
 export class DefaultPresenterService implements IPresenterService {
   private spinner: ora.Ora = null;
 
-  constructor (
+  constructor(
     private tableService: TableService,
     @Inject('STREAM') protected stream: Writable,
   ) {
   }
 
   public write(str: string) {
-    this.stream.write(str);
+    this.stream.write(str+ '\n');
   }
 
   public configure() {
