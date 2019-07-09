@@ -11,11 +11,11 @@ export class RateLimitService {
   ) {
   }
 
-  public async getRateLimit() {
+  public async getRateLimit(token?: string) {
     this.presenterService.showSpinner('Getting rate limits info');
 
     try {
-      const octokit = await this.octokitService.getOctokit();
+      const octokit = this.octokitService.getOctokit(token);
       const response = await octokit.rateLimit.get();
 
       this.presenterService.hideSpinner({ success: true, message: 'Rate limits info received' });

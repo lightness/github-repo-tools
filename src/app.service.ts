@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import { CliService } from './modules/cli/cli.service';
 import { NodeVersionService } from './modules/node-version/node.version.service';
 import { INodeVersion } from './modules/node-version/interfaces';
@@ -13,7 +13,7 @@ import { PresentationMode } from './modules/presenter/interfaces';
 export class AppService {
 
   constructor(
-    private cliService: CliService,
+    @Optional() private cliService: CliService,
     private presenterService: PresenterService,
     private rateLimitService: RateLimitService,
     private nodeVersionService: NodeVersionService,
@@ -24,19 +24,23 @@ export class AppService {
   public async main() {
     const options: IProgramOptions = await this.cliService.getProgramOptions();
 
+    return this.run(options);
+  }
+
+  public async run(options: IProgramOptions) {
     this.setupPresenter(options);
 
     this.presenterService.showFiglet();
     this.presenterService.showGithubTokenInfo(options);
 
-    const { package: packageName, node, rateLimit } = options;
+    const { package: packageName, node, rateLimit, token } = options;
 
     if (node) {
       return this.nodeCase(options);
     } else if (packageName) {
       return this.packageCase(options);
     } else if (rateLimit) {
-      return this.showRateLimit(true);
+      return this.showRateLimit(true, token);
     } else {
       this.presenterService.showError('Wrong input');
     }
@@ -45,17 +49,17 @@ export class AppService {
   private async nodeCase(options: IProgramOptions) {
     const report: INodeVersion[] = await this.nodeVersionService.getReport(options);
     this.presenterService.showData(report, options);
-    this.showRateLimit(false);
+    this.showRateLimit(false, options.token);
   }
 
   private async packageCase(options: IProgramOptions) {
     const report: IPacakgeVersion[] = await this.npmDependencyVersionService.getReport(options);
     this.presenterService.showData(report, options);
-    this.showRateLimit(false);
+    this.showRateLimit(false, options.token);
   }
 
-  private async showRateLimit(isMainInfo: boolean) {
-    const rateLimit = await this.rateLimitService.getRateLimit();
+  private async showRateLimit(isMainInfo: boolean, token?: string) {
+    const rateLimit = await this.rateLimitService.getRateLimit(token);
 
     this.presenterService.showRateLimit(rateLimit, isMainInfo);
   }

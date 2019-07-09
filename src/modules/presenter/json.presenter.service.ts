@@ -5,7 +5,7 @@ import { RawJsonPresenterService } from './raw.json.presenter.service';
 export class JsonPresenterService extends RawJsonPresenterService {
   private readonly INDENT: number = 2;
 
-  protected log(data: object) {
-    console.log(JSON.stringify(data, null, this.INDENT));
+  protected write(data: object) {
+    this.stream.write(JSON.stringify(data, null, this.INDENT));
   }
 }

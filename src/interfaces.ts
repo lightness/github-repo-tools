@@ -24,7 +24,7 @@ export interface INodeOptions {
 }
 
 export interface IPresenterOptions {
-  json?: number;
+  json?: boolean;
   rawJson?: boolean;
 }
 

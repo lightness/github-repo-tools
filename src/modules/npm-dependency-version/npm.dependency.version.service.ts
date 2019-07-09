@@ -19,9 +19,9 @@ export class NpmDependencyVersionService {
   }
 
   public async getReport(options: IProgramOptions) {
-    const { package: packageName, org, user, deps, devDeps, peerDeps, packageLock, yarnLock } = options;
+    const { package: packageName, org, user, deps, devDeps, peerDeps, packageLock, yarnLock, token } = options;
 
-    const repos = await this.octokitService.getRepos({ org, user });
+    const repos = await this.octokitService.getRepos({ org, user, token });
 
     if (!repos) {
       return null;
@@ -36,6 +36,7 @@ export class NpmDependencyVersionService {
           repo,
           packageName,
           { deps, devDeps, peerDeps, packageLock, yarnLock },
+          token,
         );
       })
     );
@@ -44,11 +45,11 @@ export class NpmDependencyVersionService {
     return result;
   }
 
-  private async getAllDependencyVersions(owner: string, repo: string, depName: string, options: IPackageOptions) {
+  private async getAllDependencyVersions(owner: string, repo: string, depName: string, options: IPackageOptions, token?: string) {
     const { deps, devDeps, peerDeps, packageLock, yarnLock } = options;
 
     try {
-      const packageJson = await this.octokitService.getPackageJson(owner, repo);
+      const packageJson = await this.octokitService.getPackageJson(owner, repo, token);
       const depVersion = deps && this.getDependencyVersion(packageJson, depName, 'dependencies');
       const devDepVersion = devDeps && this.getDependencyVersion(packageJson, depName, 'devDependencies');
       const peerDepVersion = peerDeps && this.getDependencyVersion(packageJson, depName, 'peerDependencies');
@@ -63,11 +64,11 @@ export class NpmDependencyVersionService {
       const data: IPackageVersion = { repo, version };
 
       if (packageLock) {
-        data.packageLockVersion = await this.packageLockVersionService.getVersion(owner, repo, depName).catch(() => null);
+        data.packageLockVersion = await this.packageLockVersionService.getVersion(owner, repo, depName, token).catch(() => null);
       }
 
       if (yarnLock) {
-        data.yarnLockVersion = await this.yarnLockVersionService.getVersion(owner, repo, depName).catch(() => null);
+        data.yarnLockVersion = await this.yarnLockVersionService.getVersion(owner, repo, depName, token).catch(() => null);
       }
 
       return data;

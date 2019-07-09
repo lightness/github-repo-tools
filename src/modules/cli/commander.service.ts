@@ -1,6 +1,7 @@
 import * as yargs from 'yargs';
 import { Injectable } from '@nestjs/common';
-import { IProgramOptions } from '../../interfaces.js';
+import { IProgramOptions } from '../../interfaces';
+import { DEFAULT } from '../../config/default';
 
 @Injectable()
 export class CommanderService {
@@ -31,27 +32,27 @@ export class CommanderService {
       })
       .option('deps', {
         describe: 'disable search in "dependencies" package.json field',
-        default: true,
+        default: DEFAULT.deps,
         type: 'boolean',
       })
       .option('dev-deps', {
         describe: 'disable search in "devDependencies" package.json field',
-        default: true,
+        default: DEFAULT.devDeps,
         type: 'boolean',
       })
       .option('peer-deps', {
         describe: 'disable search in "peerDependencies" package.json field',
-        default: true,
+        default: DEFAULT.peerDeps,
         type: 'boolean',
       })
       .option('yarn-lock', {
         describe: 'disable search in yarn.lock',
-        default: true,
+        default: DEFAULT.yarnLock,
         type: 'boolean',
       })
       .option('package-lock', {
         describe: 'disable search in package-lock.json',
-        default: true,
+        default: DEFAULT.packageLock,
         type: 'boolean',
       })
       .option('node', {
@@ -60,12 +61,12 @@ export class CommanderService {
       })
       .options('nvm', {
         describe: 'disable search in .nvmrc',
-        default: true,
+        default: DEFAULT.nvm,
         type: 'boolean',
       })
       .options('engines', {
         describe: 'disable search in package.json engines',
-        default: true,
+        default: DEFAULT.engines,
         type: 'boolean',
       })
       .option('rate-limit', {
@@ -74,28 +75,28 @@ export class CommanderService {
       })
       .option('skip-empty', {
         describe: 'skip repo, if package/node not found',
-        default: true,
+        default: DEFAULT.skipEmpty,
         type: 'boolean',
       })
       .option('skip-error', {
         describe: 'skip repo, if error with such code occured',
-        default: [404],
+        default: DEFAULT.skipError,
         type: 'array'
       })
       .option('raw-json', {
         describe: 'show output as json without whitespaces',
-        default: false,
+        default: DEFAULT.rawJson,
         type: 'boolean',
       })
       .option('json', {
         describe: 'show output as prettified json',
-        default: false,
+        default: DEFAULT.json,
         type: 'boolean',
       })
       .option('token', {
         alias: 't',
         describe: 'token to auth on github. Env var GITHUB_TOKEN strictly prefered',
-        default: process.env.GITHUB_TOKEN,
+        default: DEFAULT.token,
         type: 'string'
       })
       .group(['user', 'org'], 'Owner:')
