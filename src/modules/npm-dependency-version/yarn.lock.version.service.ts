@@ -12,7 +12,7 @@ export class YarnLockVersionService {
   ) {
   }
 
-  public async getVersion(owner, repo, packageName, token?: string): Promise<string> {
+  public async getVersion(owner, repo, packageName, token?: string): Promise<string[]> {
     const doc = await this.getYarnLock(owner, repo, token);
 
     if (doc.type !== 'success') {
@@ -65,7 +65,7 @@ export class YarnLockVersionService {
       }))
     ];
 
-    return allVersions.map(({ host, version }) => `${version} for ${host}`).join('\n');
+    return allVersions.map(({ host, version }) => `${version} for ${host}`);
   }
 
   private async getYarnLock(owner, repo, token?: string) {

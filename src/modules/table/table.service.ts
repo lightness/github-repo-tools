@@ -16,6 +16,11 @@ export class TableService {
     'error': Number.MAX_VALUE,
   });
 
+  private readonly TRANSFORMER = Object.freeze({
+    'packageLockVersion': versions => versions && versions.join('\n'),
+    'yarnLockVersion': versions => versions && versions.join('\n'),
+  });
+
   public format(data: IReportItem[], options: IProgramOptions): string {
     const fieldSet = data.reduce(
       (set, item) => {
@@ -42,11 +47,18 @@ export class TableService {
   
     data.forEach(item => {
       table.push({
-        [item[key] as string]: values.map(value => item[value])
+        [item[key] as string]: values.map(value => this.transform(item[value], value))
       } as any);
     });
   
     return table.toString();
+  }
+
+  private transform(value, key) {
+    // console.log(value, key);
+    return this.TRANSFORMER[key]
+      ? this.TRANSFORMER[key](value)
+      : value;
   }
 
   private filterSkippedColumns(options: IProgramOptions) {

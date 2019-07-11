@@ -10,7 +10,7 @@ export class PackageLockVersionService {
   ) {
   }
 
-  public async getVersion(owner, repo, packageName, token): Promise<string> {
+  public async getVersion(owner, repo, packageName, token): Promise<string[]> {
     const packageLock = await this.getPackageLock(owner, repo, token);
     const rootVersion = get(packageLock, `dependencies.${packageName}.version`, null);
 
@@ -48,7 +48,7 @@ export class PackageLockVersionService {
       });
     }
 
-    return versions.map(({ host, version }) => `${version} for ${host}`).join('\n');
+    return versions.map(({ host, version }) => `${version} for ${host}`);
   }
 
   private async getPackageLock(owner, repo, token?: string) {
