@@ -55,7 +55,6 @@ export class TableService {
   }
 
   private transform(value, key) {
-    // console.log(value, key);
     return this.TRANSFORMER[key]
       ? this.TRANSFORMER[key](value)
       : value;
