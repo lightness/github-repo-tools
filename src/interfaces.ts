@@ -6,6 +6,7 @@ export interface IFilterOptions {
 export interface IOwnerOptions {
   org?: string;
   user?: string;
+  repo?: string;
 }
 
 export interface IPackageOptions {

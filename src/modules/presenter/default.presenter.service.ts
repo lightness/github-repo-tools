@@ -21,7 +21,7 @@ export class DefaultPresenterService implements IPresenterService {
   }
 
   public write(str: string) {
-    this.stream.write(str+ '\n');
+    this.stream.write(str + '\n');
   }
 
   public configure() {
@@ -70,6 +70,14 @@ export class DefaultPresenterService implements IPresenterService {
     this.spinner = ora({ prefixText: message }).start();
   }
 
+  public showProcessingSpinner(options: IProgramOptions) {
+    this.write(`Search ${this.getWhatToSearch(options)}`);
+    this.write(`Search at ${this.getWhereToSearch(options)}`);
+    this.write(`Search in ${this.getRepoToSearch(options)}`);
+
+    this.showSpinner(`Processing...`);
+  }
+
   public hideSpinner({ success, message }: { success: boolean, message: string }) {
     if (message) {
       this.spinner.prefixText = message;
@@ -82,14 +90,57 @@ export class DefaultPresenterService implements IPresenterService {
     }
   }
 
-  public showSearchNodeVersion({ nvm, engines }: { nvm: boolean, engines: boolean }) {
-    const sources = [nvm && '.nvmrc', engines && 'package.json engines'].filter(x => x).join(' and ');
+  protected getWhatToSearch(options: IProgramOptions): string {
+    const { node, package: packageName } = options;
 
-    this.write(`Search node version from ${sources}`);
+    if (node) {
+      return 'node version';
+    }  
+    
+    if (packageName) {
+      return `version of npm package ${chalk.green(packageName)}`;
+    }
+
+    return null;
   }
 
-  public showSearchPackageVersion(packageName: string) {
-    this.write(`NPM package to search: ${chalk.green(packageName)}`);
+  protected getWhereToSearch(options: IProgramOptions): string {
+    const { node, package: packageName } = options;
+
+    const format = s => s.filter(x => x).join(', ');
+
+    if (node) {
+      const { nvm, engines } = options;
+
+      return format([
+        nvm && '.nvmrc', 
+        engines && 'package.json engines'
+      ]);
+    } 
+
+    if (packageName) {
+      const { yarnLock, packageLock, deps, devDeps, peerDeps } = options;
+
+      return format([
+        yarnLock && 'yarn.lock',
+        packageLock && 'package-lock.json',
+        (deps || devDeps || peerDeps) && `package.json (${
+          format([
+            deps && 'dependencies',
+            devDeps && 'devDependencies',
+            peerDeps && 'peerDependencies',
+          ])
+        })`,
+      ]);
+    }
+
+    return null;
+  }
+
+  protected getRepoToSearch(options: IProgramOptions): string {
+    const { repo } = options;
+
+    return repo ? `${chalk.green(repo)}` : 'all repos';
   }
 
 }

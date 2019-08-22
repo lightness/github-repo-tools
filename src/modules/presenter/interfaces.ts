@@ -14,7 +14,6 @@ export interface IPresenterService {
   showError(message: string);
   showData(report: IReportItem[], options: IProgramOptions);
   showSpinner(message: string);
+  showProcessingSpinner(options: IProgramOptions);
   hideSpinner({ success, message }: { success: boolean, message?: string });
-  showSearchNodeVersion({ nvm, engines }: { nvm: boolean, engines: boolean });
-  showSearchPackageVersion(packageName: string);
 }
