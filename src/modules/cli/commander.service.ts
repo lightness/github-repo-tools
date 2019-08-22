@@ -25,10 +25,10 @@ export class CommanderService {
         describe: 'github user where search applied',
         type: 'string',
       })
-      .option('repo', {
+      .option('repos', {
         alias: 'r',
         describe: 'github user where search applied',
-        type: 'string',
+        type: 'array',
       })
       .option('package', {
         alias: 'p',
