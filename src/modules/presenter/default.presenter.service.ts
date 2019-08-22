@@ -138,9 +138,9 @@ export class DefaultPresenterService implements IPresenterService {
   }
 
   protected getRepoToSearch(options: IProgramOptions): string {
-    const { repo } = options;
+    const { repos } = options;
 
-    return repo ? `${chalk.green(repo)}` : 'all repos';
+    return repos ? `${chalk.green(repos.join(', '))}` : 'all repos';
   }
 
 }
