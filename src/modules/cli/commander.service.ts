@@ -25,6 +25,11 @@ export class CommanderService {
         describe: 'github user where search applied',
         type: 'string',
       })
+      .option('repo', {
+        alias: 'r',
+        describe: 'github user where search applied',
+        type: 'string',
+      })
       .option('package', {
         alias: 'p',
         describe: 'package to search',
@@ -99,7 +104,7 @@ export class CommanderService {
         default: DEFAULT.token,
         type: 'string'
       })
-      .group(['user', 'org'], 'Owner:')
+      .group(['user', 'org', 'repo'], 'Owner:')
       .group(['package', 'deps', 'dev-deps', 'peer-deps', 'yarn-lock', 'package-lock'], 'NPM package:')
       .group(['node', 'nvm', 'engines'], 'Node version:')
       .check(this.validation)

@@ -1,9 +1,9 @@
+import { Writable } from 'stream';
 import * as Octokit from '@octokit/rest';
 import { Injectable, Inject } from '@nestjs/common';
 import { IPresenterService } from './interfaces';
 import { IReportItem, IProgramOptions } from '../../interfaces';
 import { getFilter } from '../../util/result-filter';
-import { Writable } from 'stream';
 
 @Injectable()
 export class RawJsonPresenterService implements IPresenterService {
@@ -47,13 +47,10 @@ export class RawJsonPresenterService implements IPresenterService {
   public showSpinner() {
   }
 
+  public showProcessingSpinner() {
+  }
+
   public hideSpinner() {
-  }
-
-  public showSearchNodeVersion() {
-  }
-
-  public showSearchPackageVersion() {
   }
 
 }

@@ -57,16 +57,12 @@ export class PresenterService implements IPresenterService {
     this.presenter.showSpinner(message);
   }
 
+  public showProcessingSpinner(options: IProgramOptions) {
+    this.presenter.showProcessingSpinner(options);
+  }
+
   public hideSpinner({ success, message }: { success: boolean, message?: string }) {
     this.presenter.hideSpinner({ success, message });
-  }
-
-  public showSearchNodeVersion({ nvm, engines }: { nvm: boolean, engines: boolean }) {
-    this.presenter.showSearchNodeVersion({ nvm, engines });
-  }
-
-  public showSearchPackageVersion(packageName: string) {
-    this.presenter.showSearchPackageVersion(packageName);
   }
 
 }

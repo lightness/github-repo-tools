@@ -13,7 +13,15 @@ export abstract class BaseReportService<T extends IReportItem> {
   protected abstract handleRepo(repo: string, options: IProgramOptions): Promise<T>;
 
   public async getReport(options: IProgramOptions): Promise<T[]> {
-    const { org, user, nvm, engines, token } = options;
+    const { org, user, token, repo } = options;
+
+    if (repo) {
+      this.presenterService.showProcessingSpinner(options);
+      const repoReport = await this.getRepoReport(repo, options);
+      this.presenterService.hideSpinner({ success: true });
+      
+      return [repoReport];
+    }
 
     const repos = await this.octokitService.getRepos({ org, user, token });
 
@@ -21,21 +29,22 @@ export abstract class BaseReportService<T extends IReportItem> {
       return null;
     }
 
-    this.presenterService.showSearchNodeVersion({ nvm, engines });
-    this.presenterService.showSpinner(`Search in every repo...`);
+    this.presenterService.showProcessingSpinner(options);
     const result = await Promise.all(
-      repos.map(async repo => {
-        try {
-          return await this.handleRepo(repo, options);
-        }
-        catch (e) {
-          return { repo, error: e.message } as T;
-        }
-      })
+      repos.map(async repo => await this.getRepoReport(repo, options))
     );
     this.presenterService.hideSpinner({ success: true });
 
     return result;
+  }
+
+  private async getRepoReport(repo: string, options: IProgramOptions): Promise<T> {
+    try {
+      return await this.handleRepo(repo, options);
+    }
+    catch (e) {
+      return { repo, error: e.message } as T;
+    }
   }
 
 }
