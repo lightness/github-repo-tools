@@ -1,7 +1,7 @@
 {
   "name": "github-repo-tools",
   "version": "2.4.0",
-  "description": "Useful tool to get versions from all repos of Github user/org",
+  "description": "Useful tool to get versions (node or npm package) from repo(s) of Github user/org",
   "main": "build/index.js",
   "bin": {
     "grt": "./build/app.js"
