@@ -6,79 +6,47 @@ import { PackageLockVersionService } from './package.lock.version.service';
 import { YarnLockVersionService } from './yarn.lock.version.service';
 import { PresenterService } from '../presenter/presenter.service';
 import { IPacakgeVersion as IPackageVersion } from './interfaces';
+import { BaseReportService } from '../base/base.report.service';
 
 @Injectable()
-export class NpmDependencyVersionService {
+export class NpmDependencyVersionService extends BaseReportService<IPackageVersion> {
 
   constructor(
-    private octokitService: OctokitService,
+    octokitService: OctokitService,
+    presenterService: PresenterService,
     private packageLockVersionService: PackageLockVersionService,
     private yarnLockVersionService: YarnLockVersionService,
-    private presenterService: PresenterService,
   ) {
+    super(octokitService, presenterService);
   }
 
-  public async getReport(options: IProgramOptions) {
-    const { package: packageName, org, user, deps, devDeps, peerDeps, packageLock, yarnLock, token } = options;
+  protected async handleRepo(repo: string, options: IProgramOptions): Promise<IPackageVersion> {
+    const { deps, devDeps, peerDeps, packageLock, yarnLock, user, org, token, package: packageName } = options;
+    const owner = user || org;
 
-    const repos = await this.octokitService.getRepos({ org, user, token });
+    const packageJson = await this.octokitService.getPackageJson(owner, repo, token);
+    const depVersion = deps && this.getDependencyVersion(packageJson, packageName, 'dependencies');
+    const devDepVersion = devDeps && this.getDependencyVersion(packageJson, packageName, 'devDependencies');
+    const peerDepVersion = peerDeps && this.getDependencyVersion(packageJson, packageName, 'peerDependencies');
+    const version = ([
+      depVersion,
+      devDepVersion && `${devDepVersion} (dev)`,
+      peerDepVersion && `${peerDepVersion} (peer)`
+    ])
+      .filter(x => x)
+      .join(', ') || null;
 
-    if (!repos) {
-      return null;
+    const data: IPackageVersion = { repo, version };
+
+    if (packageLock) {
+      data.packageLockVersion = await this.packageLockVersionService.getVersion(owner, repo, packageName, token).catch(() => null);
     }
 
-    this.presenterService.showSearchPackageVersion(packageName);
-    this.presenterService.showSpinner('Search for NPM package in every repo...');
-    const result = await Promise.all(
-      repos.map(repo => {
-        return this.getAllDependencyVersions(
-          org || user,
-          repo,
-          packageName,
-          { deps, devDeps, peerDeps, packageLock, yarnLock },
-          token,
-        );
-      })
-    );
-    this.presenterService.hideSpinner({ success: true });
-
-    return result;
-  }
-
-  private async getAllDependencyVersions(owner: string, repo: string, depName: string, options: IPackageOptions, token?: string) {
-    const { deps, devDeps, peerDeps, packageLock, yarnLock } = options;
-
-    try {
-      const packageJson = await this.octokitService.getPackageJson(owner, repo, token);
-      const depVersion = deps && this.getDependencyVersion(packageJson, depName, 'dependencies');
-      const devDepVersion = devDeps && this.getDependencyVersion(packageJson, depName, 'devDependencies');
-      const peerDepVersion = peerDeps && this.getDependencyVersion(packageJson, depName, 'peerDependencies');
-      const version = ([
-        depVersion,
-        devDepVersion && `${devDepVersion} (dev)`,
-        peerDepVersion && `${peerDepVersion} (peer)`
-      ])
-        .filter(x => x)
-        .join(', ') || null;
-
-      const data: IPackageVersion = { repo, version };
-
-      if (packageLock) {
-        data.packageLockVersion = await this.packageLockVersionService.getVersion(owner, repo, depName, token).catch(() => null);
-      }
-
-      if (yarnLock) {
-        data.yarnLockVersion = await this.yarnLockVersionService.getVersion(owner, repo, depName, token).catch(() => null);
-      }
-
-      return data;
+    if (yarnLock) {
+      data.yarnLockVersion = await this.yarnLockVersionService.getVersion(owner, repo, packageName, token).catch(() => null);
     }
-    catch (e) {
-      return {
-        repo,
-        error: e.message,
-      };
-    }
+
+    return data;
   }
 
   private getDependencyVersion(packageJson, depName, field = 'dependencies') {
