@@ -5,6 +5,8 @@ import { DefaultPresenterService } from './default.presenter.service';
 import { JsonPresenterService } from './json.presenter.service';
 import { IReportItem, IProgramOptions } from '../../interfaces';
 import { RawJsonPresenterService } from './raw.json.presenter.service';
+import { CsvPresenterService } from './csv.presenter.service';
+import { MarkdownPresenterService } from './markdown.presenter.service';
 
 @Injectable()
 export class PresenterService implements IPresenterService {
@@ -18,6 +20,8 @@ export class PresenterService implements IPresenterService {
     private defaultPresenterService: DefaultPresenterService,
     private jsonPresenterService: JsonPresenterService,
     private rawJsonPresenterService: RawJsonPresenterService,
+    private csvPresenterService: CsvPresenterService,
+    private markdownPresenerService: MarkdownPresenterService,
   ) {
   }
 
@@ -27,6 +31,10 @@ export class PresenterService implements IPresenterService {
         return this.rawJsonPresenterService;
       case PresentationMode.JSON:
         return this.jsonPresenterService;
+      case PresentationMode.CSV:
+        return this.csvPresenterService;
+      case PresentationMode.MARKDOWN:
+        return this.markdownPresenerService;
       case PresentationMode.DEFAULT:
       default:
         return this.defaultPresenterService;

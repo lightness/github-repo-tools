@@ -70,17 +70,20 @@ export class AppService {
   }
 
   private getPresentationMode(options: IProgramOptions): PresentationMode {
-    const { json, rawJson } = options;
+    const { json, rawJson, csv, md } = options;
 
-    if (rawJson) {
-      return PresentationMode.RAW_JSON;
+    switch (true) {
+      case rawJson:
+        return PresentationMode.RAW_JSON;
+      case json:
+        return PresentationMode.JSON;
+      case csv:
+        return PresentationMode.CSV;
+      case md:
+        return PresentationMode.MARKDOWN;
+      default:
+        return PresentationMode.DEFAULT;
     }
-
-    if (json) {
-      return PresentationMode.JSON;
-    }
-
-    return PresentationMode.DEFAULT;
   }
 
 }
