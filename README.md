@@ -44,6 +44,7 @@ public access restricted
 Owner:
   --user, -u  github user where search applied                          [string]
   --org, -o   github org where search applied                           [string]
+  --repo
 
 NPM package:
   --package, -p   package to search                                     [string]
@@ -56,13 +57,14 @@ NPM package:
   --yarn-lock     disable search in yarn.lock          [boolean] [default: true]
   --package-lock  disable search in package-lock.json  [boolean] [default: true]
 
-Node version
+Node version:
   --node, -n  search node version based on .nvmrc and package.json engines
   --nvm       disable search in .nvmrc                 [boolean] [default: true]
   --engines   disable search in package.json engines   [boolean] [default: true]
 
 Options:
   -v, --version     Show version number                                [boolean]
+  --repos, -r       github user where search applied                     [array]
   --rate-limit, -l  show rate limit
   --skip-empty      skip repo, if package/node not found
                                                        [boolean] [default: true]
@@ -71,6 +73,11 @@ Options:
   --raw-json        show output as json without whitespaces
                                                       [boolean] [default: false]
   --json            show output as prettified json    [boolean] [default: false]
+  --csv             show output as csv                [boolean] [default: false]
+  --md              show output as markdown table     [boolean] [default: false]
+  --token, -t       token to auth on github. Env var GITHUB_TOKEN strictly
+                    prefered
+                  [string] [default: "92d7df612a5e395bb5e9f803a111055dced79cd3"]
   -h, --help        Show help                                          [boolean]
 ```
 
