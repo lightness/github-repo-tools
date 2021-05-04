@@ -98,6 +98,16 @@ export class CommanderService {
         default: DEFAULT.json,
         type: 'boolean',
       })
+      .option('csv', {
+        describe: 'show output as csv',
+        default: DEFAULT.csv,
+        type: 'boolean',
+      })
+      .option('md', {
+        describe: 'show output as markdown table',
+        default: DEFAULT.md,
+        type: 'boolean',
+      })
       .option('token', {
         alias: 't',
         describe: 'token to auth on github. Env var GITHUB_TOKEN strictly prefered',

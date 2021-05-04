@@ -27,6 +27,8 @@ export interface INodeOptions {
 export interface IPresenterOptions {
   json?: boolean;
   rawJson?: boolean;
+  csv?: boolean;
+  md?: boolean;
 }
 
 export interface IProgramOptions extends IFilterOptions, IOwnerOptions, IPackageOptions, INodeOptions, IPresenterOptions {

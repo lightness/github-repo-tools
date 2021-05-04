@@ -5,6 +5,8 @@ export enum PresentationMode {
   DEFAULT = 'default',
   JSON = 'json',
   RAW_JSON = 'raw-json',
+  CSV = 'csv',
+  MARKDOWN = 'markdown',
 }
 
 export interface IPresenterService {

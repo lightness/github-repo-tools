@@ -6,6 +6,8 @@ export const DEFAULT: IProgramOptions = {
 
   json: false,
   rawJson: false,
+  csv: false,
+  md: false,
 
   engines: true,
   nvm: true,
