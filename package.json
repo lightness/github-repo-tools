@@ -1,10 +1,10 @@
 {
   "name": "github-repo-tools",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "description": "Useful tool to get versions (node or npm package) from repo(s) of Github user/org",
   "main": "build/index.js",
   "bin": {
-    "grt": "./build/app.js"
+    "grt": "build/app.js"
   },
   "scripts": {
     "clean": "rimraf ./build",
