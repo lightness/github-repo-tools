@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { OctokitModule } from '../octokit/octokit.module';
 import { NodeVersionService } from './node.version.service';
 import { PresenterModule } from '../presenter/presenter.module';
+import { CodeRepositoryModule } from '../code-repository/code-repository.module';
 
 @Module({
   imports: [
-    OctokitModule,
+    CodeRepositoryModule,
     PresenterModule,
   ],
   providers: [NodeVersionService],

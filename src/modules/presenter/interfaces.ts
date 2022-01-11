@@ -11,7 +11,7 @@ export enum PresentationMode {
 
 export interface IPresenterService {
   showFiglet();
-  showGithubTokenInfo(options: IProgramOptions);
+  showTokenInfo(options: IProgramOptions);
   showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate, isMainInfo: boolean);
   showError(message: string);
   showData(report: IReportItem[], options: IProgramOptions);

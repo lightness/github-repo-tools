@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Memoize } from 'lodash-decorators';
-import { IProgramOptions } from '../../interfaces';
+import { IProgramOptions, RepoService } from '../../interfaces';
 import { CommanderService } from './commander.service';
 import { InquirerService } from './inquirer.service';
 import { InputValidatorService } from './input.validator.service';
@@ -18,7 +18,9 @@ export class CliService {
 
   @Memoize()
   public getProgramOptions(): Promise<IProgramOptions> {
-    const options = this.commanderService.getProgramOptions();
+    let options = this.commanderService.getProgramOptions();
+
+    options = this.sanitizeToken(options);
 
     return this.patchOptions(options);
   }
@@ -43,11 +45,32 @@ export class CliService {
         return this.inquirerService.promptOwner();
       case 'mode':
         return this.inquirerService.promptMode();
+      case 'workspace':
+        return this.inquirerService.promptWorkspace();
     }
   }
 
   private isResultInvalid(result): result is InvalidResult {
     return !result.valid;
+  }
+
+  private sanitizeToken(options) {
+    if (options.token) {
+      return options;
+    }
+
+    if (!options.tokenName) {
+      options.tokenName = this.getTokenName(options.repoService);
+    }
+
+    return {
+      ...options,
+      token: process.env[options.tokenName],
+    };
+  }
+
+  private getTokenName(repoService: RepoService){
+    return `${repoService}_TOKEN`.toUpperCase();
   }
 
 }

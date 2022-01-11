@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as lockfile from '@yarnpkg/lockfile';
-import { OctokitService } from '../octokit/octokit.service';
+import { CodeRepositoryService } from '../code-repository/code-repository.service';
 
 @Injectable()
 export class YarnLockVersionService {
@@ -8,12 +8,12 @@ export class YarnLockVersionService {
   private REGEXP = /^(.+)\@(.+)$/;
 
   constructor(
-    private octokitService: OctokitService,
+    private codeRepositoryService: CodeRepositoryService,
   ) {
   }
 
-  public async getVersion(owner, repo, packageName, token?: string): Promise<string[]> {
-    const doc = await this.getYarnLock(owner, repo, token);
+  public async getVersion(repo, packageName, options): Promise<string[]> {
+    const doc = await this.getYarnLock(repo, options);
 
     if (doc.type !== 'success') {
       return null;
@@ -68,9 +68,9 @@ export class YarnLockVersionService {
     return allVersions.map(({ host, version }) => `${version} for ${host}`);
   }
 
-  private async getYarnLock(owner, repo, token?: string) {
+  private async getYarnLock(repo, options) {
     try {
-      const content = await this.octokitService.getFileContent(owner, repo, 'yarn.lock', token);
+      const content = await this.codeRepositoryService.getFileContent(repo, 'yarn.lock', options);
 
       return lockfile.parse(content);
     } catch (e) {

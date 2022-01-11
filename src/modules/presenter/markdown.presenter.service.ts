@@ -42,7 +42,7 @@ export class MarkdownPresenterService implements IPresenterService {
   public showFiglet() {
   }
 
-  public showGithubTokenInfo() {
+  public showTokenInfo() {
   }
 
   public async showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate, isMainInfo: boolean) {

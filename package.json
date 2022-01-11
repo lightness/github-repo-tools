@@ -34,6 +34,7 @@
     "@octokit/plugin-retry": "^2.2.0",
     "@octokit/rest": "^16.25.3",
     "@yarnpkg/lockfile": "^1.1.0",
+    "bitbucket": "^2.6.3",
     "chalk": "^2.4.2",
     "change-case": "^3.1.0",
     "cli-table3": "^0.5.1",

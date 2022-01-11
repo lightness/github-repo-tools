@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { get } from 'lodash';
-import { OctokitService } from '../octokit/octokit.service';
+import { CodeRepositoryService } from '../code-repository/code-repository.service';
 
 @Injectable()
 export class PackageLockVersionService {
 
   constructor(
-    private octokitService: OctokitService,
+    private codeRepositoryService: CodeRepositoryService,
   ) {
   }
 
-  public async getVersion(owner, repo, packageName, token): Promise<string[]> {
-    const packageLock = await this.getPackageLock(owner, repo, token);
+  public async getVersion(repo, packageName, options): Promise<string[]> {
+    const packageLock = await this.getPackageLock(repo, options);
     const rootVersion = get(packageLock, `dependencies.${packageName}.version`, null);
 
     if (!rootVersion) {
@@ -51,9 +51,9 @@ export class PackageLockVersionService {
     return versions.map(({ host, version }) => `${version} for ${host}`);
   }
 
-  private async getPackageLock(owner, repo, token?: string) {
+  private async getPackageLock(repo, options) {
     try {
-      return JSON.parse(await this.octokitService.getFileContent(owner, repo, 'package-lock.json', token));
+      return JSON.parse(await this.codeRepositoryService.getFileContent(repo, 'package-lock.json', options));
     } catch (e) {
       return null;
     }

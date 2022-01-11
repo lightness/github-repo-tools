@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { IFilterOptions } from '../interfaces';
 
 export function getFilter({ skipError, skipEmpty }: IFilterOptions) {
-  const filterError = ({ error }) => !error || (skipError instanceof Array ? !skipError.includes(+error) : !skipError);
+  const filterError = ({ error }) => !error || (skipError instanceof Array ? !skipError.includes(error) : skipError !== error);
 
   const filterEmpty = (item) => {
     if (!skipEmpty) {

@@ -45,8 +45,8 @@ export class PresenterService implements IPresenterService {
     this.presenter.showFiglet();
   }
 
-  public showGithubTokenInfo(options: IProgramOptions) {
-    this.presenter.showGithubTokenInfo(options);
+  public showTokenInfo(options: IProgramOptions) {
+    this.presenter.showTokenInfo(options);
   }
 
   public showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate, isMainInfo: boolean) {

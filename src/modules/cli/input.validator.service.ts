@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IProgramOptions, IOwnerOptions } from '../../interfaces';
+import { IProgramOptions, RepoService } from '../../interfaces';
 import { Mode, ValidationResult } from './interfaces';
 
 @Injectable()
@@ -11,8 +11,19 @@ export class InputValidatorService {
     switch (mode) {
       case Mode.NODE:
       case Mode.PACKAGE:
-        if (!this.getOwner(options)) {
-          return { valid: false, askAbout: 'owner' };
+        switch (options.repoService) {
+          case RepoService.GITHUB:
+            if (!this.getOwner(options)) {
+              return { valid: false, askAbout: 'owner' };
+            }
+
+            return { valid: true };
+          case RepoService.BITBUCKET:
+            if (!this.getWorkspace(options)) {
+              return { valid: false, askAbout: 'workspace' };
+            }
+
+            return { valid: true };
         }
       case Mode.RATE_LIMIT:
         return { valid: true };
@@ -37,8 +48,12 @@ export class InputValidatorService {
     return null;
   }
 
-  private getOwner({ org, user }: IOwnerOptions) {
+  private getOwner({ org, user }: IProgramOptions) {
     return org || user || null;
+  }
+
+  private getWorkspace({ workspace }: IProgramOptions) {
+    return workspace || null;
   }
 
 }

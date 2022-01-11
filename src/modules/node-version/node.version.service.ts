@@ -1,29 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { IProgramOptions } from '../../interfaces';
 import { INodeVersion } from './interfaces';
-import { OctokitService } from '../octokit/octokit.service';
+
 import { PresenterService } from '../presenter/presenter.service';
 import { BaseReportService } from '../base/base.report.service';
+import { CodeRepositoryService } from '../code-repository/code-repository.service';
+import { RepoInfo } from '../code-repository/repo-info';
 
 @Injectable()
 export class NodeVersionService extends BaseReportService<INodeVersion> {
 
   constructor(
-    octokitService: OctokitService,
+    codeRepositoryService: CodeRepositoryService,
     presenterService: PresenterService,
   ) {
-    super(octokitService, presenterService);
+    super(codeRepositoryService, presenterService);
   }
 
-  protected async handleRepo(repo: string, options: IProgramOptions): Promise<INodeVersion> {
-    const { org, user, nvm, engines, token } = options;
+  protected async handleRepo(repo: RepoInfo, options: IProgramOptions): Promise<INodeVersion> {
+    const { nvm, engines } = options;
 
     const [nvmVersion, enginesVersion] = await Promise.all([
-      nvm ? this.getNvmrc(org || user, repo, token).catch(() => null) : null,
-      engines ? this.getEngines(org || user, repo, token).catch(() => null) : null
+      nvm ? this.getNvmrc(repo, options).catch(() => null) : null,
+      engines ? this.getEngines(repo, options).catch(() => null) : null
     ]);
 
-    const data: INodeVersion = { repo };
+    const data: INodeVersion = { repo: repo.name };
 
     if (nvm) {
       data.nvmVersion = nvmVersion;
@@ -36,14 +38,15 @@ export class NodeVersionService extends BaseReportService<INodeVersion> {
     return data;
   }
 
-  private async getNvmrc(owner, repo, token): Promise<string> {
-    const content = await this.octokitService.getFileContent(owner, repo, '.nvmrc', token);
+  private async getNvmrc(repo, options): Promise<string> {
+    const content = await this.codeRepositoryService.getFileContent(repo, '.nvmrc', options);
 
     return content.trim();
   }
 
-  private async getEngines(owner, repo, token): Promise<string> {
-    const packageJson = await this.octokitService.getPackageJson(owner, repo, token);
+  private async getEngines(repo, options): Promise<string> {
+    const packageJsonContent = await this.codeRepositoryService.getFileContent(repo, 'package.json', options);
+    const packageJson = JSON.parse(packageJsonContent);
     const engines = packageJson.engines;
 
     if (!engines || !engines.node) {

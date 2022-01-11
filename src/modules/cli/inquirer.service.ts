@@ -28,6 +28,18 @@ export class InquirerService {
     }
   }
 
+  public async promptWorkspace(): Promise<IProgramOptions> {
+    const { workspace } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'workspace',
+        message: `In what bitbucket workspace you want to search?`
+      },
+    ]);
+
+    return { workspace };
+  }
+
   public async promptMode(): Promise<IProgramOptions> {
     const { mode } = await inquirer.prompt([
       {

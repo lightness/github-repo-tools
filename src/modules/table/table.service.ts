@@ -7,13 +7,13 @@ import { IProgramOptions, IReportItem } from '../../interfaces';
 export class TableService {
 
   private readonly ORDER = Object.freeze({
-    'repo': Number.MIN_VALUE,
-    'version': -10,
-    'packageLockVersion': -11,
-    'yarnLockVersion': -12,
-    'nvmVersion': -7,
-    'enginesVersion': -6,
-    'error': Number.MAX_VALUE,
+    'repo': Number.MAX_SAFE_INTEGER,
+    'version': 20,
+    'packageLockVersion': 19,
+    'yarnLockVersion': 18,
+    'nvmVersion': 7,
+    'enginesVersion': 6,
+    'error': 100,
   });
 
   private readonly TRANSFORMER = Object.freeze({
@@ -30,13 +30,13 @@ export class TableService {
   
         return set;
       },
-      new Set(),
+      new Set<string>(),
     );
   
     const fields = [...fieldSet]
       .filter(this.filterSkippedColumns(options))
       .sort(this.orderColumns());
-  
+
     const headers = fields.map(field => changeCase.sentenceCase(field));
   
     const table = new Table({

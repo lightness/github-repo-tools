@@ -1,12 +1,30 @@
-export interface IFilterOptions {
-  skipEmpty?: boolean;
-  skipError?: number[];
+export enum RepoService {
+  GITHUB = 'github',
+  BITBUCKET = 'bitbucket'
 }
 
-export interface IOwnerOptions {
+export interface IFilterOptions {
+  skipEmpty?: boolean;
+  skipError?: (number | string)[];
+}
+
+export interface IGithubOwnerOptions {
   org?: string;
   user?: string;
+}
+
+export interface IBitbucketOwnerOptions {
+  workspace?: string;
+}
+
+export interface ITokenOptions {
+  token?: string;
+  tokenName?: string;
+}
+
+export interface IOwnerOptions extends IGithubOwnerOptions, IBitbucketOwnerOptions {
   repos?: string[];
+  repoService?: RepoService;
 }
 
 export interface IPackageOptions {
@@ -31,9 +49,8 @@ export interface IPresenterOptions {
   md?: boolean;
 }
 
-export interface IProgramOptions extends IFilterOptions, IOwnerOptions, IPackageOptions, INodeOptions, IPresenterOptions {
+export interface IProgramOptions extends IFilterOptions, IOwnerOptions, IPackageOptions, INodeOptions, IPresenterOptions, ITokenOptions {
   rateLimit?: boolean;
-  token?: string;
 }
 
 export interface IReportItem {

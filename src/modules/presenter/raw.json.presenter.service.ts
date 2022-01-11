@@ -1,9 +1,9 @@
 import { Writable } from 'stream';
-import * as Octokit from '@octokit/rest';
 import { Injectable, Inject } from '@nestjs/common';
 import { IPresenterService } from './interfaces';
 import { IReportItem, IProgramOptions } from '../../interfaces';
 import { getFilter } from '../../util/result-filter';
+import { IRateLimits } from '../code-repository/interfaces';
 
 @Injectable()
 export class RawJsonPresenterService implements IPresenterService {
@@ -20,10 +20,10 @@ export class RawJsonPresenterService implements IPresenterService {
   public showFiglet() {
   }
 
-  public showGithubTokenInfo() {
+  public showTokenInfo() {
   }
 
-  public async showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate, isMainInfo: boolean) {
+  public async showRateLimit(rateLimit: IRateLimits, isMainInfo: boolean) {
     if (isMainInfo) {
       this.write(rateLimit);
     }

@@ -31,16 +31,16 @@ export class AppService {
     this.setupPresenter(options);
 
     this.presenterService.showFiglet();
-    this.presenterService.showGithubTokenInfo(options);
+    this.presenterService.showTokenInfo(options);
 
-    const { package: packageName, node, rateLimit, token } = options;
+    const { package: packageName, node, rateLimit } = options;
 
     if (node) {
       return this.nodeCase(options);
     } else if (packageName) {
       return this.packageCase(options);
     } else if (rateLimit) {
-      return this.showRateLimit(true, token);
+      return this.showRateLimit(true, options);
     } else {
       this.presenterService.showError('Wrong input');
     }
@@ -49,17 +49,17 @@ export class AppService {
   private async nodeCase(options: IProgramOptions) {
     const report: INodeVersion[] = await this.nodeVersionService.getReport(options);
     this.presenterService.showData(report, options);
-    this.showRateLimit(false, options.token);
+    this.showRateLimit(false, options);
   }
 
   private async packageCase(options: IProgramOptions) {
     const report: IPacakgeVersion[] = await this.npmDependencyVersionService.getReport(options);
     this.presenterService.showData(report, options);
-    this.showRateLimit(false, options.token);
+    this.showRateLimit(false, options);
   }
 
-  private async showRateLimit(isMainInfo: boolean, token?: string) {
-    const rateLimit = await this.rateLimitService.getRateLimit(token);
+  private async showRateLimit(isMainInfo: boolean, options: IProgramOptions) {
+    const rateLimit = await this.rateLimitService.getRateLimit(options);
 
     this.presenterService.showRateLimit(rateLimit, isMainInfo);
   }

@@ -1,6 +1,6 @@
 import * as yargs from 'yargs';
 import { Injectable } from '@nestjs/common';
-import { IProgramOptions } from '../../interfaces';
+import { RepoService, IProgramOptions } from '../../interfaces';
 import { DEFAULT } from '../../config/default';
 
 @Injectable()
@@ -8,26 +8,37 @@ export class CommanderService {
 
   public getProgramOptions(): IProgramOptions {
     const argv = yargs
-      .usage('Search npm packages in all org repos. You can set GITHUB_TOKEN env var, if public access restricted')
+      .usage('Search npm packages in all org/workspace repos. You can set token via env var, if public access restricted')
       .help('help')
       .alias('h', 'help')
       .showHelpOnFail(false, 'Specify --help for available options')
       .version()
       .alias('v', 'version')
       .describe('v', 'show version information')
+      .option('repo-service', {
+        alias: 'R',
+        describe: 'code repository service (github, bitbucket)',
+        type: 'string',
+        default: DEFAULT.repoService,
+      })
       .option('org', {
         alias: 'o',
-        describe: 'github org where search applied',
+        describe: 'org name (github)',
         type: 'string',
       })
       .option('user', {
         alias: 'u',
-        describe: 'github user where search applied',
+        describe: 'user name (github)',
+        type: 'string',
+      })
+      .options('workspace', {
+        alias: 'w',
+        describe: 'workspace name (bitbucket)',
         type: 'string',
       })
       .option('repos', {
         alias: 'r',
-        describe: 'github user where search applied',
+        describe: 'repos where search applied',
         type: 'array',
       })
       .option('package', {
@@ -110,11 +121,15 @@ export class CommanderService {
       })
       .option('token', {
         alias: 't',
-        describe: 'token to auth on github. Env var GITHUB_TOKEN strictly prefered',
-        default: DEFAULT.token,
+        describe: 'token to auth. Env var strongly recommented',
         type: 'string'
       })
-      .group(['user', 'org', 'repo'], 'Owner:')
+      .option('token-name', {
+        alias: 'tn',
+        describe: 'name of env variable with token. GITHUB_TOKEN / BITBUCKET_TOKEN by default.',
+        type: 'string'
+      })
+      .group(['repo-service', 'user', 'org', 'workspace', 'repos', 'token', 'token-name'], 'Owner:')
       .group(['package', 'deps', 'dev-deps', 'peer-deps', 'yarn-lock', 'package-lock'], 'NPM package:')
       .group(['node', 'nvm', 'engines'], 'Node version:')
       .check(this.validation)
@@ -124,10 +139,18 @@ export class CommanderService {
   }
 
   validation(argv: IProgramOptions) {
-    const { user, org } = argv;
+    const { user, org, repoService, token, tokenName } = argv;
 
     if (user && org) {
       throw new Error('You should specify either user or org. Not both');
+    }
+
+    if (token && tokenName) {
+      throw new Error('You should specify either token or token name. Not both');
+    }
+
+    if (!Object.values(RepoService).includes(repoService)) {
+      throw new Error('Only github and bitbucket are supported');
     }
 
     return true;

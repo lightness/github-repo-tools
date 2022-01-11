@@ -9,6 +9,7 @@ import { IPresenterService } from './interfaces';
 import { IReportItem, IProgramOptions } from '../../interfaces';
 import { getFilter } from '../../util/result-filter';
 import { Writable } from 'stream';
+import { IRateLimits } from '../code-repository/interfaces';
 
 @Injectable()
 export class DefaultPresenterService implements IPresenterService {
@@ -31,13 +32,14 @@ export class DefaultPresenterService implements IPresenterService {
     this.write(figlet.textSync('Github Repo Tools'));
   }
 
-  public showGithubTokenInfo(options: IProgramOptions) {
-    const withGithubToken = !!options.token;
+  public showTokenInfo(options: IProgramOptions) {
+    const isTokenUsed = !!options.token;
+    const { tokenName } = options;
 
-    this.write(`Use GITHUB_TOKEN env: ${withGithubToken ? chalk.green('yes') : chalk.red('no')}`);
+    this.write(`Use ${tokenName} env: ${isTokenUsed ? chalk.green('yes') : chalk.red('no')}`);
   }
 
-  public showRateLimit(rateLimit: Octokit.RateLimitGetResponseRate) {
+  public showRateLimit(rateLimit: IRateLimits, isMainInfo: boolean) {
     if (!rateLimit) {
       return;
     }

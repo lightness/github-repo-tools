@@ -1,8 +1,10 @@
-import { IProgramOptions } from "../interfaces";
+import { IProgramOptions, RepoService } from "../interfaces";
 
 export const DEFAULT: IProgramOptions = {
+  repoService: RepoService.GITHUB,
+
   skipEmpty: true,
-  skipError: [404],
+  skipError: [404, '404'],
 
   json: false,
   rawJson: false,
@@ -17,6 +19,4 @@ export const DEFAULT: IProgramOptions = {
   peerDeps: true,
   packageLock: true,
   yarnLock: true,
-
-  token: process.env.GITHUB_TOKEN,
 }
