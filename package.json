@@ -1,6 +1,6 @@
 {
   "name": "github-repo-tools",
-  "version": "2.5.2-rc.1",
+  "version": "2.6.0-alpha.0",
   "description": "Useful tool to get versions (node or npm package) from repo(s) of Github user/org",
   "main": "build/index.js",
   "bin": {
